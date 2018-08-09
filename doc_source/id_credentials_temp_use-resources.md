@@ -4,7 +4,7 @@ You can use temporary security credentials to make programmatic requests for AWS
 + When you make a call using temporary security credentials, the call must include a session token, which is returned along with those temporary credentials\. AWS uses the session token to validate the temporary security credentials\. 
 + The temporary credentials expire after a specified interval\. After the credentials expire, any calls that you make with those credentials will fail, so you must get a new set of credentials\. 
 
-If you are using the [AWS SDKs](https://aws.amazon.com/tools), the [AWS Command Line Interface](http://docs.aws.amazon.com/cli/latest/userguide/) \(AWS CLI\), or the [Tools for Windows PowerShell](https://aws.amazon.com/powershell), the way in which you get and use temporary security credentials differs depending on the context\. If you are running code, AWS CLI, or Tools for Windows PowerShell commands inside an EC2 instance, you can take advantage of roles for Amazon EC2\. Otherwise, you can call an AWS STS API to get the temporary credentials, and then use them explicitly to make calls to AWS services\.
+If you are using the [AWS SDKs](https://aws.amazon.com/tools), the [AWS Command Line Interface](http://docs.aws.amazon.com/cli/latest/userguide/) \(AWS CLI\), or the [Tools for Windows PowerShell](https://aws.amazon.com/powershell), the way in which you get and use temporary security credentials differs depending on the context\. If you are running code, AWS CLI, or Tools for Windows PowerShell commands inside an EC2 instance, you can take advantage of roles for Amazon EC2\. Otherwise, you can call an [AWS STS API](http://docs.aws.amazon.com/STS/latest/APIReference/) to get the temporary credentials, and then use them explicitly to make calls to AWS services\.
 
 **Note**  
 You can use AWS Security Token Service \(AWS STS\) to create and provide trusted users with temporary security credentials that can control access to your AWS resources\. For more information about AWS STS, see [Temporary Security Credentials](id_credentials_temp.md)\. AWS STS is a global service that has a default endpoint at `https://sts.amazonaws.com`\. This endpoint is in the US East \(Ohio\) region, although credentials that you get from this and other endpoints are valid globally and work with services and resources in any region\. You can also choose to make AWS STS API calls to endpoints in any of the supported regions\. This can reduce latency by making the requests from servers in a region that is geographically closer to you\. No matter which region your credentials come from, they work globally\. For more information, see [Activating and Deactivating AWS STS in an AWS Region](id_credentials_temp_enable-regions.md)\.
@@ -13,7 +13,6 @@ You can use AWS Security Token Service \(AWS STS\) to create and provide trusted
 + [Using Temporary Credentials in Amazon EC2 Instances](#using-temp-creds-sdk-ec2-instances)
 + [Using Temporary Security Credentials with the AWS SDKs](#using-temp-creds-sdk)
 + [Using Temporary Security Credentials with the AWS CLI](#using-temp-creds-sdk-cli)
-+ [Using Temporary Security Credentials with the Tools for Windows PowerShell](#using-temp-creds-twp)
 + [Using Temporary Security Credentials with API Operations](#RequestWithSTS)
 + [More Information](#using-temp-creds-more-info)
 
@@ -26,7 +25,7 @@ Applications, AWS CLI, and Tools for Windows PowerShell commands that run on the
 For more information and for examples, see the following:
 +  [Using IAM Roles to Grant Access to AWS Resources on Amazon Elastic Compute Cloud](http://docs.aws.amazon.com/sdk-for-java/v1/developer-guide/java-dg-roles.html) — AWS SDK for Java
 +  [Granting Access Using an IAM Role](http://docs.aws.amazon.com/sdk-for-net/latest/developer-guide/net-dg-hosm.html) — AWS SDK for \.NET 
-+  [Creating a Role](http://docs.aws.amazon.com/sdk-for-ruby/v2/developer-guide/iam-example-create-role.html) — AWS SDK for Ruby
++  [Creating a Role](http://docs.aws.amazon.com/sdk-for-ruby/v3/developer-guide/iam-example-create-role.html) — AWS SDK for Ruby
 
 ## Using Temporary Security Credentials with the AWS SDKs<a name="using-temp-creds-sdk"></a>
 
@@ -41,9 +40,9 @@ tempCredentials = new SessionAWSCredentials(
 s3Request = CreateAmazonS3Client(tempCredentials);
 ```
 
-For an example written in Python \(using the [AWS SDK for Python \(Boto\)](https://aws.amazon.com/sdk-for-python/)\) that shows how to call `AssumeRole` to get temporary security credentials, and then use those credentials to make a call to Amazon S3, see [Switching to an IAM Role \(API\)](id_roles_use_switch-role-api.md)\.
+For an example written in Python \(using the [AWS SDK for Python \(Boto\)](https://aws.amazon.com/sdk-for-python/)\) that shows how to call `AssumeRole` to get temporary security credentials, and then use those credentials to make a call to Amazon S3, see [Switching to an IAM Role \(AWS API\)](id_roles_use_switch-role-api.md)\.
 
-For details about how to call `AssumeRole`, `GetFederationToken`, and other API operations, and about how to get the temporary security credentials and session token from the result, see the documentation for the SDK that you're working with\. You can find the documentation for all the AWS SDKs on the main [AWS documentation page](http://aws.amazon.com/documentation)\. 
+For details about how to call `AssumeRole`, `GetFederationToken`, and other API operations, see the [AWS Security Token Service API Reference](http://docs.aws.amazon.com/STS/latest/APIReference/)\. For information on getting the temporary security credentials and session token from the result, see the documentation for the SDK that you're working with\. You can find the documentation for all the AWS SDKs on the main [AWS documentation page](http://aws.amazon.com/documentation), in the **SDKs and Toolkits** section\.
 
 You must make sure that you get a new set of credentials before the old ones expire\. In some SDKs, you can use a provider that manages the process of refreshing credentials for you; check the documentation for the SDK you're using\. 
 
@@ -51,7 +50,7 @@ You must make sure that you get a new set of credentials before the old ones exp
 
 You can use temporary security credentials with the AWS CLI\. This can be useful for testing policies\. 
 
-Using the AWS CLI, you can call an AWS STS API like `AssumeRole` or `GetFederationToken` and then capture the resulting output\. The following example shows a call to `AssumeRole` that sends the output to a file\. In the example, the `profile` parameter is assumed to be a profile in the AWS CLI configuration file and is assumed to reference credentials for an IAM user who has permissions to assume the role\.
+Using the [AWS CLI](http://docs.aws.amazon.com/cli/latest/reference/), you can call an [ AWS STS API](http://docs.aws.amazon.com/STS/latest/APIReference/) like `AssumeRole` or `GetFederationToken` and then capture the resulting output\. The following example shows a call to `AssumeRole` that sends the output to a file\. In the example, the `profile` parameter is assumed to be a profile in the AWS CLI configuration file and is assumed to reference credentials for an IAM user who has permissions to assume the role\.
 
 ```
 $ aws sts assume-role --role-arn arn:aws:iam::123456789012:role/role-name --role-session-name "RoleSession1" --profile IAM-user-name > assume-role-output.txt
@@ -79,46 +78,6 @@ C:\> SET AWS_ACCESS_KEY_ID=AKIAI44QH8DHBEXAMPLE
 C:\> SET AWS_SECRET_ACCESS_KEY=wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY
 C:\> SET AWS_SESSION_TOKEN=AQoDYXdzEJr...<remainder of token> 
 C:\> aws ec2 describe-instances --region us-west-1
-```
-
-## Using Temporary Security Credentials with the Tools for Windows PowerShell<a name="using-temp-creds-twp"></a>
-
-You can use temporary security credentials with the AWS Tools for Windows PowerShell\. This can be useful for testing policies\. 
-
-With the Tools for Windows PowerShell, you can call an AWS STS API action like `AssumeRole` or `GetFederationToken` and then capture the resulting output\. The following example shows a PowerShell command that calls `AssumeRole` and stores the resulting role object in the variable `$role`\. The `StoredCredentials` parameter is assumed to be a profile in the Tools for Windows PowerShell configuration file set up by `Set-AWSCredentials` or `Initialized-AWSDefaults` and is assumed to reference credentials for an IAM user who has permissions to assume the role\.
-
-```
-PS C:\> $role = Use-STSRole -RoleArn arn:aws:iam::123456789012:role/MySampleRole -RoleSessionName RoleSession1 -StoredCredentials IAM-user-name
-```
-
-When the command is finished, you can extract the access key ID, secret access key, and session token from the variable\.
-
-```
-PS C:\> $role.AssumedRoleUser
-Arn                                                            AssumedRoleId
----                                                            -------------
-arn:aws:sts::123456789012:assumed-role/clirole/RoleSession1     AROAJVIFQ5TJISRUTVTUE:RoleSession1
-
-PS C:\> $role.Credentials.AccessKeyId
-AKIAIOSFODNN7EXAMPLE
-
-PS C:\> $role.Credentials.SecretAccessKey
-wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY
-
-PS C:\> $role.Credentials.SessionToken
-AQoDYXdzEPT//////////wEXAMPLEtc764bNrC9SAPBSM22wDOk4x4HIZ8j4FZTwdQWLWsKWHGBuFqwAeMicRXmxfpSPfIeoIYRqT
-flfKD8YUuwthAx7mSEI/qkPpKPi/kMcGdQrmGdeehM4IC1NtBmUpp2wUE8phUZampKsburEDy0KPkyQDYwT7WZ0wq5VSXDvp75YU9
-HFvlRd8Tx6q6fE8YQcHNVXAkiY9q6d+xo0rKwT38xVqr7ZD0u0iPPkUL64lIZbqBAz+scqKmlzm8FDrypNC9Yjc8fPOLn9FX9KSYv
-KTr4rvx3iSIlTJabIQwj2ICCR/oLxBA==
-
-PS C:\> $role.Credentials.Expiration
-Wednesday, July 08, 2015 3:22:32 PM
-```
-
-The following example shows how you might use the variable\-stored credentials and then use them to call an AWS CLI command\. 
-
-```
-PS C:\> Get-EC2Instance -Region us-west-2 -Credential $role.Credentials
 ```
 
 ## Using Temporary Security Credentials with API Operations<a name="RequestWithSTS"></a>

@@ -2,13 +2,15 @@
 
 If your AWS account root user multi\-factor authentication \(MFA\) device is lost, damaged, or not working, you can sign in using alternative methods of authentication\. This means that if you can't sign in with your MFA device, you can sign in by verifying your identity using the email and phone that are registered with your account\. 
 
-If the device appears to be functioning properly, but you cannot use it to access your AWS resources, then it might be out of synchronization with the AWS system\. For information about synchronizing an MFA device, see [Resynchronize MFA Devices](id_credentials_mfa_sync.md)\.
+If the device appears to be functioning properly, but you cannot use it to access your AWS resources, then it might be out of synchronization with the AWS system\. For information about synchronizing an MFA device, see [Resynchronizing MFA Devices](id_credentials_mfa_sync.md)\.
 
 If the MFA device associated with an IAM user is lost or stops working, the user can't recover it\. IAM users must contact an administrator to deactivate the device\.
 
 Before you sign in as a root user using alternative factors of authentication, make sure that you have access to the email and phone number that are associated with your account\.
 
 **To sign in using alternative factors of authentication as an AWS account root user**
+
+1. Use your AWS account email address and password to sign in to the [AWS Management Console](https://console.aws.amazon.com/) as the *[AWS account root user](http://docs.aws.amazon.com/IAM/latest/UserGuide/id_root-user.html)*\.
 
 1. On the **Amazon Web Services Sign In With Authentication Device** page, choose **Having problems with your authentication device? Click here**\.
 **Note**  
@@ -44,6 +46,6 @@ If you are using an AWS account created after September 14, 2017, you might see 
 
 1. If you are using a hardware MFA device, contact the third\-party provider for help fixing or replacing the device\. After you have the new physical MFA device, enable the device as described in [Enabling a Hardware MFA Device \(Console\)](id_credentials_mfa_enable_physical.md)\.
 
-   If you are using a virtual MFA device, remove the account from your device\. Then enable the virtual device as described in [Enabling a Virtual Multi\-factor Authentication \(MFA\) Device](id_credentials_mfa_enable_virtual.md)\.
+   If you are using a virtual MFA device, remove the account from your device\. Then enable the virtual device as described in [Enabling a Virtual Multi\-factor Authentication \(MFA\) Device \(Console\)](id_credentials_mfa_enable_virtual.md)\.
 
-1. If your MFA device is missing or stolen, also [change your password](id_credentials_passwords.md#id_credentials_passwords_user-change-own) in case an attacker has stolen the authentication device and might also have your current password\.
+1. If your MFA device is missing or stolen, also [change your password](id_credentials_passwords_user-change-own.md) in case an attacker has stolen the authentication device and might also have your current password\.

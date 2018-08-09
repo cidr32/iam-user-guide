@@ -21,32 +21,33 @@ You can specify the following actions in the `Action` element of an IAM policy s
 
 | Actions | Description | Access Level | Resource Types \(\*required\) | Condition Keys | Dependent Actions | 
 | --- | --- | --- | --- | --- | --- | 
-| [http://docs.aws.amazon.com/athena/latest/APIReference/API_BatchGetNamedQuery.html](http://docs.aws.amazon.com/athena/latest/APIReference/API_BatchGetNamedQuery.html) | Gets information about one or more named queries\. | Read |  |  |  | 
-| [http://docs.aws.amazon.com/athena/latest/APIReference/API_BatchGetQueryExecution.html](http://docs.aws.amazon.com/athena/latest/APIReference/API_BatchGetQueryExecution.html) | Gets information about one or more query executions\. | Read |  |  |  | 
-| CancelQueryExecution | Deprecated\. Applies only to AWS services and principals that use Athena JDBC driver earlier than 1\.1\.0\. Use StopQueryExecution otherwise\. | Write |  |  |  | 
-| [http://docs.aws.amazon.com/athena/latest/APIReference/API_CreateNamedQuery.html](http://docs.aws.amazon.com/athena/latest/APIReference/API_CreateNamedQuery.html) | Creates a named query\. | Write |  |  |  | 
-| [http://docs.aws.amazon.com/athena/latest/APIReference/API_DeleteNamedQuery.html](http://docs.aws.amazon.com/athena/latest/APIReference/API_DeleteNamedQuery.html) | Deletes a named query specified\. | Write |  |  |  | 
-| GetCatalogs | Applies only to AWS services managed policy and principals that use an Athena JDBC driver\. Enables access to databases and tables\. | Read |  |  |  | 
-| GetExecutionEngine | Applies only to AWS services managed policy and principals that use an Athena JDBC driver\. Enables access to databases and tables\. | Read |  |  |  | 
-| GetExecutionEngines | Applies only to AWS services managed policy and principals that use an Athena JDBC driver\. Enables access to databases and tables\. | Read |  |  |  | 
-| [http://docs.aws.amazon.com/athena/latest/APIReference/API_GetNamedQuery.html](http://docs.aws.amazon.com/athena/latest/APIReference/API_GetNamedQuery.html) | Gets information about the specified named query\. | Read |  |  |  | 
-| GetNamespace | Applies only to AWS services managed policy and principals that use an Athena JDBC driver\. Enables access to databases and tables\. | Read |  |  |  | 
-| GetNamespaces | Applies only to AWS services managed policy and principals that use an Athena JDBC driver\. Enables access to databases and tables\. | Read |  |  |  | 
-| [http://docs.aws.amazon.com/athena/latest/APIReference/API_GetQueryExecution.html](http://docs.aws.amazon.com/athena/latest/APIReference/API_GetQueryExecution.html) | Gets information about the specified query execution\. | Read |  |  |  | 
-| GetQueryExecutions | Deprecated\. Applies only to AWS services and principals that use Athena JDBC driver earlier than 1\.1\.0\. Use ListQueryExecutions otherwise\. | Read |  |  |  | 
-| [http://docs.aws.amazon.com/athena/latest/APIReference/API_GetQueryResults.html](http://docs.aws.amazon.com/athena/latest/APIReference/API_GetQueryResults.html) | Gets information about the results of the specified query execution\. | Read |  |  |  | 
-| GetTable | Applies only to AWS services managed policy and principals that use an Athena JDBC driver\. Enables access to tables\. | Read |  |  |  | 
-| GetTables | Applies only to AWS services managed policy and principals that use an Athena JDBC driver\. Enables access to tables\. | Read |  |  |  | 
-| [http://docs.aws.amazon.com/athena/latest/APIReference/API_ListNamedQueries.html](http://docs.aws.amazon.com/athena/latest/APIReference/API_ListNamedQueries.html) | Returns a list of named queries in Amazon Athena for the specified AWS account\. | List |  |  |  | 
-| [http://docs.aws.amazon.com/athena/latest/APIReference/API_ListQueryExecutions.html](http://docs.aws.amazon.com/athena/latest/APIReference/API_ListQueryExecutions.html) | Returns a list of query executions for the specified AWS account\. | List |  |  |  | 
-| RunQuery | Deprecated\. Applies only to AWS services and principals that use Athena JDBC driver earlier than 1\.1\.0\. Use StartQueryExecution otherwise\. | Write |  |  |  | 
-| [http://docs.aws.amazon.com/athena/latest/APIReference/API_StartQueryExecution.html](http://docs.aws.amazon.com/athena/latest/APIReference/API_StartQueryExecution.html) | Starts a query execution using a SQL query provided as a string\. | Write |  |  |  | 
-| [http://docs.aws.amazon.com/athena/latest/APIReference/API_StopQueryExecution.html](http://docs.aws.amazon.com/athena/latest/APIReference/API_StopQueryExecution.html) | Stops the specified query execution\. | Write |  |  |  | 
+|   [ BatchGetNamedQuery ](http://docs.aws.amazon.com/athena/latest/APIReference/API_BatchGetNamedQuery.html)  | Grants permissions to get information about one or more named queries\. | Read |  |  |  | 
+|   [ BatchGetQueryExecution ](http://docs.aws.amazon.com/athena/latest/APIReference/API_BatchGetQueryExecution.html)  | Grants permissions to get information about one or more query executions\. | Read |  |  |  | 
+|   [ CancelQueryExecution ](http://docs.aws.amazon.com/athena/latest/APIReference/API_StopQueryExecution.html)  | Deprecated\. Applies only to AWS services and principals that use Athena JDBC driver earlier than 1\.1\.0\. Use StopQueryExecution otherwise\. | Write |  |  |  | 
+|   [ CreateNamedQuery ](http://docs.aws.amazon.com/athena/latest/APIReference/API_CreateNamedQuery.html)  | Grants permissions to create a named query\. | Write |  |  |  | 
+|   [ DeleteNamedQuery ](http://docs.aws.amazon.com/athena/latest/APIReference/API_DeleteNamedQuery.html)  | Grants permissions to delete a named query specified\. | Write |  |  |  | 
+|   [ GetCatalogs ](https://docs.aws.amazon.com/athena/latest/ug/connect-with-previous-jdbc.html#jdbc-prev-version-policies)  | Applies only to AWS services managed policy and principals that use an Athena JDBC driver version 1\.1\.0\. Grants permissions to enable access to databases and tables\. | Read |  |  |  | 
+|   [ GetExecutionEngine ](https://docs.aws.amazon.com/athena/latest/ug/connect-with-previous-jdbc.html#jdbc-prev-version-policies)  | Applies only to AWS services managed policy and principals that use an Athena JDBC driver version 1\.1\.0\. Grants permissions to enable access to the specified database and table\. | Read |  |  |  | 
+|   [ GetExecutionEngines ](https://docs.aws.amazon.com/athena/latest/ug/connect-with-previous-jdbc.html#jdbc-prev-version-policies)  | Applies only to AWS services managed policy and principals that use an Athena JDBC driver version 1\.1\.0\. Grants permissions to enable access to databases and tables\. | Read |  |  |  | 
+|   [ GetNamedQuery ](http://docs.aws.amazon.com/athena/latest/APIReference/API_GetNamedQuery.html)  | Grants permissions to get information about the specified named query\. | Read |  |  |  | 
+|   [ GetNamespace ](https://docs.aws.amazon.com/athena/latest/ug/connect-with-previous-jdbc.html#jdbc-prev-version-policies)  | Applies only to AWS services managed policy and principals that use an Athena JDBC driver version 1\.1\.0\. Grants permissions to enable access to the specified database and table\. | Read |  |  |  | 
+|   [ GetNamespaces ](https://docs.aws.amazon.com/athena/latest/ug/connect-with-previous-jdbc.html#jdbc-prev-version-policies)  | Applies only to AWS services managed policy and principals that use an Athena JDBC driver version 1\.1\.0\. Grants permissions to enable access to databases and tables\. | Read |  |  |  | 
+|   [ GetQueryExecution ](http://docs.aws.amazon.com/athena/latest/APIReference/API_GetQueryExecution.html)  | Grants permissions to get information about the specified query execution\. | Read |  |  |  | 
+|   [ GetQueryExecutions ](http://docs.aws.amazon.com/athena/latest/APIReference/API_ListQueryExecutions.html)  | Deprecated\. Applies only to AWS services and principals that use Athena JDBC driver earlier than 1\.1\.0\. Use ListQueryExecutions otherwise\. | Read |  |  |  | 
+|   [ GetQueryResults ](http://docs.aws.amazon.com/athena/latest/APIReference/API_GetQueryResults.html)  | Grants permissions to get the query results\. | Read |  |  |  | 
+|   [ GetQueryResultsStream ](https://docs.aws.amazon.com/athena/latest/ug/connect-with-previous-jdbc.html#jdbc-prev-version-policies)  | Grants permissions to get the query results stream\. | Read |  |  |  | 
+|   [ GetTable ](https://docs.aws.amazon.com/athena/latest/ug/connect-with-previous-jdbc.html#jdbc-prev-version-policies)  | Applies only to AWS services managed policy and principals that use an Athena JDBC driver version 1\.1\.0\. Grants permissions to enable access to the specified table\. | Read |  |  |  | 
+|   [ GetTables ](https://docs.aws.amazon.com/athena/latest/ug/connect-with-previous-jdbc.html#jdbc-prev-version-policies)  | Applies only to AWS services managed policy and principals that use an Athena JDBC driver version 1\.1\.0\. Grants permissions to enable access to tables\. | Read |  |  |  | 
+|   [ ListNamedQueries ](http://docs.aws.amazon.com/athena/latest/APIReference/API_ListNamedQueries.html)  | Grants permissions to return a list of named queries in Amazon Athena for the specified AWS account\. | List |  |  |  | 
+|   [ ListQueryExecutions ](http://docs.aws.amazon.com/athena/latest/APIReference/API_ListQueryExecutions.html)  | Grants permissions to return a list of query executions for the specified AWS account\. | List |  |  |  | 
+|   [ RunQuery ](http://docs.aws.amazon.com/athena/latest/APIReference/API_startQueryExecution.html)  | Deprecated\. Applies only to AWS services and principals that use Athena JDBC driver earlier than 1\.1\.0\. Use StartQueryExecution otherwise\. | Write |  |  |  | 
+|   [ StartQueryExecution ](http://docs.aws.amazon.com/athena/latest/APIReference/API_StartQueryExecution.html)  | Grants permissions to start a query execution using an SQL query provided as a string\. | Write |  |  |  | 
+|   [ StopQueryExecution ](http://docs.aws.amazon.com/athena/latest/APIReference/API_StopQueryExecution.html)  | Grants permissions to stop the specified query execution\. | Write |  |  |  | 
 
 ## Resources Defined by Athena<a name="amazonathena-resources-for-iam-policies"></a>
 
-Athena has no service\-defined resources that can be used as the `Resource` element of an IAM policy statement\.
+Amazon Athena has no service\-defined resources that can be used as the `Resource` element of an IAM policy statement\.
 
 ## Condition Keys for Amazon Athena<a name="amazonathena-policy-keys"></a>
 
-Athena has no service\-specific context keys that can be used in the `Condition` element of policy statements\. For the list of the global context keys that are available to all services, see [Available Keys for Conditions](http://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_condition-keys.html#AvailableKeys) in the *IAM Policy Reference*\.
+Athena has no service\-specific context keys that can be used in the `Condition` element of policy statements\. For the list of the global context keys that are available to all services, see [Available Keys for Conditions](reference_policies_condition-keys.html#AvailableKeys) in the *IAM Policy Reference*\.

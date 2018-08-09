@@ -11,6 +11,13 @@ Using roles in this way has several benefits\. Because role credentials are temp
 **Note**  
 Although a role is usually assigned to an EC2 instance when you launch it, a role can also be attached to an EC2 instance that is already running\. To learn how to attach a role to a running instance, see [IAM Roles for Amazon EC2](http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/iam-roles-for-amazon-ec2.html#attach-iam-role)\.
 
+**Topics**
++ [How Do Roles for EC2 Instances Work?](#roles-usingrole-ec2instance-roles)
++ [Permissions Required for Using Roles with Amazon EC2](#roles-usingrole-ec2instance-permissions)
++ [How Do I Get Started?](#roles-usingrole-ec2instance-get-started)
++ [Related Information](#roles-usingrole-ec2instance-related-info)
++ [Using Instance Profiles](id_roles_use_switch-role-ec2_instance-profiles.md)
+
 ## How Do Roles for EC2 Instances Work?<a name="roles-usingrole-ec2instance-roles"></a>
 
 In the following figure, a developer runs an application on an EC2 instance that requires access to the S3 bucket named `photos`\. An administrator creates the `Get-pics` service role and attaches the role to the EC2 instance\. The role includes a permissions policy that grants read\-only access to the specified S3 bucket\. It also includes a trust policy that allows the EC2 instance to assume the role and retrieve the temporary credentials\. When the application runs on the instance, it can use the role's temporary credentials to access the photos bucket\. The administrator doesn't have to grant the developer permission to access the photos bucket, and the developer never has to share or manage credentials\.
@@ -66,7 +73,7 @@ To restrict which roles a user can pass to an EC2 instance, you create a policy 
 `PassRole` is not an API action in the same way that `RunInstances` or `ListInstanceProfiles` is\. Instead, it's a permission that AWS checks whenever a role ARN is passed as a parameter to an API \(or the console does this on the user's behalf\)\. It helps an administrator to control which roles can be passed by which users\. In this case, it ensures that the user is allowed to attach a specific role to an Amazon EC2 instance\.
 
 **Example policy that grants a user permission to launch an EC2 instance with a specific role**  
-The following sample policy allows users to use the Amazon EC2 API to launch an instance with a role\. The `Resource` element specifies the Amazon Resource Name \(ARN\) of a role\. By specifying the ARN, the policy grants the user the permission to pass only the `Get-pics` role\. If the user tries to specify a different role when launching an instance, the action fails\.  
+The following sample policy allows users to use the Amazon EC2 API to launch an instance with a role\. The `Resource` element specifies the Amazon Resource Name \(ARN\) of a role\. By specifying the ARN, the policy grants the user the permission to pass only the `Get-pics` role\. If the user tries to specify a different role when launching an instance, the action fails\. The user does have permissions to run any instance, regardless of whether they pass a role\.  
 
 ```
 {
@@ -92,7 +99,7 @@ To understand how roles work with EC2 instances, you need to use the IAM console
 + SDK walkthroughs\. The AWS SDK documentation includes walkthroughs that show an application running on an EC2 instance that uses temporary credentials for roles to read an Amazon S3 bucket\. Each of the following walkthroughs presents similar steps with a different programming language:
   + [ Using IAM Roles for EC2 Instances with the SDK for Java](http://docs.aws.amazon.com/sdk-for-java/v1/developer-guide/java-dg-roles.html) in the *AWS SDK for Java Developer Guide* 
   + [ Using IAM Roles for EC2 Instances with the SDK for \.NET](http://docs.aws.amazon.com/sdk-for-net/latest/developer-guide/net-dg-roles.html) in the *AWS SDK for \.NET Developer Guide*
-  + [ Using IAM Roles for EC2 Instances with the SDK for Ruby](http://docs.aws.amazon.com/sdk-for-ruby/v2/developer-guide/ruby-dg-roles.html) in the *AWS SDK for Ruby Developer Guide*
+  + [ Using IAM Roles for EC2 Instances with the SDK for Ruby](http://docs.aws.amazon.com/sdk-for-ruby/v3/developer-guide/ruby-dg-roles.html) in the *AWS SDK for Ruby Developer Guide*
 
     The walkthroughs provide complete step\-by\-step instructions for creating and compiling the example program, creating the role, launching the instance, connecting to the instance, deploying the example program, and testing it\.
 

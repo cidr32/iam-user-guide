@@ -3,7 +3,7 @@
 *Resources* are objects within a service\. IAM resources include groups, users, roles, and policies\. If you are signed in with AWS account root user credentials, you have no restrictions on administering IAM credentials or IAM resources\. However, IAM users must explicitly be given permissions to administer credentials or IAM resources\. You can do this by attaching an identity\-based policy to the user\.
 
 **Note**  
-Throughout the AWS documentation, when we refer to an IAM policy without mentioning any of the specific categories, we mean an identity\-based, customer managed policy\. For details about policy categories, see [IAM Policies](access_policies.md)\.
+Throughout the AWS documentation, when we refer to an IAM policy without mentioning any of the specific categories, we mean an identity\-based, customer managed policy\. For details about policy categories, see [Policies and Permissions](access_policies.md)\.
 
 ## Permissions for Administering IAM Identities<a name="access_permissions-required-identities"></a>
 
@@ -20,19 +20,29 @@ The permissions that are required to administer IAM groups, users, roles, and cr
 }
 ```
 
-In a policy, the value of the `Resource` element depends on the action and what resources the action can affect\. In the preceding example, the policy allows a user to create any user \(`*` is a wildcard that matches all strings\)\. In contrast, a policy that allows users to change only their own access keys \(API actions [http://docs.aws.amazon.com/IAM/latest/APIReference/API_CreateAccessKey.html](http://docs.aws.amazon.com/IAM/latest/APIReference/API_CreateAccessKey.html) and [http://docs.aws.amazon.com/IAM/latest/APIReference/API_UpdateAccessKey.html](http://docs.aws.amazon.com/IAM/latest/APIReference/API_UpdateAccessKey.html)\) typically has a `Resource` element\. In that case the ARN includes a variable that resolves to the current user's name, as in the following example \(replace `ACCOUNT-ID-WITHOUT-HYPHENS` with your AWS account ID\): 
+In a policy, the value of the `Resource` element depends on the action and what resources the action can affect\. In the preceding example, the policy allows a user to create any user \(`*` is a wildcard that matches all strings\)\. In contrast, a policy that allows users to change only their own access keys \(API actions [http://docs.aws.amazon.com/IAM/latest/APIReference/API_CreateAccessKey.html](http://docs.aws.amazon.com/IAM/latest/APIReference/API_CreateAccessKey.html) and [http://docs.aws.amazon.com/IAM/latest/APIReference/API_UpdateAccessKey.html](http://docs.aws.amazon.com/IAM/latest/APIReference/API_UpdateAccessKey.html)\) typically has a `Resource` element\. In this case the ARN includes a variable \(`${aws:username}`\) that resolves to the current user's name, as in the following example: 
 
 ```
 {
-  "Version": "2012-10-17",
-  "Statement": {
-    "Effect": "Allow",
-    "Action": [
-      "iam:CreateAccessKey",
-      "iam:UpdateAccessKey"
-    ],
-    "Resource": "arn:aws:iam::accountid:user/${aws:username}"
-  }
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "ListUsersForConsole",
+            "Effect": "Allow",
+            "Action": "iam:ListUsers",
+            "Resource": "arn:aws:iam::*:*"
+        },
+        {
+            "Sid": "ViewAndUpdateAccessKeys",
+            "Effect": "Allow",
+            "Action": [
+                "iam:UpdateAccessKey",
+                "iam:CreateAccessKey",
+                "iam:ListAccessKeys"
+            ],
+            "Resource": "arn:aws:iam::*:user/${aws:username}"
+        }
+    ]
 }
 ```
 
@@ -70,7 +80,7 @@ If you want to give users permissions to administer groups, users, roles, polici
 You can directly grant IAM users in your own account access to your resources\. If users from another account need access to your resources, you can create an IAM role, which is an entity that includes permissions but that isn't associated with a specific user\. Users from other accounts can then use the role and access resources according to the permissions you've assigned to the role\. For more information, see [Providing Access to an IAM User in Another AWS Account That You Own](id_roles_common-scenarios_aws-accounts.md)\.
 
 **Note**  
-For services that support resource\-based policies as described in [Identity\-Based Policies and Resource\-Based Policies](access_policies_identity-vs-resource.md) \(such as Amazon S3, Amazon SNS, and Amazon SQS\), an alternative to using roles is to attach a policy to the resource \(bucket, topic, or queue\) that you want to share\. The resource\-based policy can specify the AWS account that has permissions to access the resource\.
+Some services support resource\-based policies as described in [Identity\-Based Policies and Resource\-Based Policies](access_policies_identity-vs-resource.md) \(such as Amazon S3, Amazon SNS, and Amazon SQS\)\. For those services, an alternative to using roles is to attach a policy to the resource \(bucket, topic, or queue\) that you want to share\. The resource\-based policy can specify the AWS account that has permissions to access the resource\.
 
 ## Permissions for One Service to Access Another<a name="UserPermissionsAcrossAWS_ARCHIVE"></a>
 

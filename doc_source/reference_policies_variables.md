@@ -135,12 +135,21 @@ The following policy might be used for an IAM group\. It gives users in that gro
 
 ```
 {
-  "Version": "2012-10-17",
-  "Statement": [{
-    "Effect": "Allow",
-    "Action": "sqs:*",
-    "Resource": "arn:aws:sqs:us-east-2:*:${aws:username}-queue"
-  }]
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "ListForConsole",
+            "Effect": "Allow",
+            "Action": "sqs:ListQueues",
+            "Resource": "*"
+        },
+        {
+            "Sid": "AllQueueActions",
+            "Effect": "Allow",
+            "Action": "sqs:*",
+            "Resource": "arn:aws:sqs:us-east-2:*:${aws:username}-queue"
+        }
+    ]
 }
 ```
 
@@ -225,8 +234,8 @@ These predefined policy variables can be used in any string where you can use re
 ## For More Information<a name="policy-vars-formoreinfo"></a>
 
  For more information about policies, see the following: 
-+  [IAM Policies](access_policies.md) 
++  [Policies and Permissions](access_policies.md) 
 +  [Example Policies](access_policies_examples.md) 
 +  [IAM JSON Policy Elements Reference](reference_policies_elements.md) 
-+  [IAM JSON Policy Evaluation Logic](reference_policies_evaluation-logic.md) 
++  [Policy Evaluation Logic](reference_policies_evaluation-logic.md) 
 +  [About Web Identity Federation](id_roles_providers_oidc.md)

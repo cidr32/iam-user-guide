@@ -1,7 +1,7 @@
 # AWS Services That Work with IAM<a name="reference_aws-services-that-work-with-iam"></a>
 
 The AWS services listed below are grouped by their [AWS product categories](https://aws.amazon.com/products/) and include information about what IAM features they support:
-+ **Service** – You can choose the name of a service to view the AWS documentation for that service\.
++ **Service** – You can choose the name of a service to view the AWS documentation about IAM authorization and access for that service\.
 + **Actions** – You can specify individual actions in a policy\. If the service does not support this feature, then **All actions** is selected in the [visual editor](access_policies_create.md#access_policies_create-visual-editor)\. In a JSON policy document, you must use `*` in the `Action` element\. For a list of actions in each service, see [Actions, Resources, and Condition Keys for AWS Services](reference_policies_actions-resources-contextkeys.md)\.
 + **Resource\-level permissions** – You can use [ARNs](http://docs.aws.amazon.com/general/latest/gr/aws-arns-and-namespaces.html) to specify individual resources in the policy\. If the service does not support this feature, then **All resources** is chosen in the [policy visual editor](access_policies_create.md#access_policies_create-visual-editor)\. In a JSON policy document, you must use `*` in the `Resource` element\. Some actions, such as `List*` actions, do not support specifying an ARN because they are designed to return multiple resources\. If a service supports this feature for some resources but not others, it is indicated by yellow cells in the table\. See the documentation for that service for more information\.
 + **Resource\-based policies** – You can attach resource\-based policies to a resource within the service\. Resource\-based policies include a `Principal` element to specify which IAM identities can access that resource\. For more information, see [Identity\-Based Policies and Resource\-Based Policies](access_policies_identity-vs-resource.md)\.
@@ -24,7 +24,7 @@ The AWS services listed below are grouped by their [AWS product categories](http
 |  [Amazon Elastic Container Registry \(Amazon ECR\)](http://docs.aws.amazon.com/AmazonECR/latest/userguide/ECR_IAM_policies.html)  | Yes | Yes | Yes | No | Yes | No | 
 |  [Amazon Elastic Container Service \(Amazon ECS\)](http://docs.aws.amazon.com/AmazonECS/latest/developerguide//IAM_policies.html)  | Yes | Yes | No | No | Yes | [Yes](http://docs.aws.amazon.com/AmazonECS/latest/developerguide/using-service-linked-roles.html) | 
 |  [Elastic Load Balancing](http://docs.aws.amazon.com/elasticloadbalancing/latest/userguide/index.html?UsingIAM.html)  | Yes | Yes | No | No | Yes | [Yes](http://docs.aws.amazon.com/elasticloadbalancing/latest/userguide/elb-service-linked-roles.html) | 
-|  [AWS Lambda](http://docs.aws.amazon.com/lambda/latest/dg/lambda-auth-and-access-control.html)  | Yes | Yes | Yes² | No | Yes | No | 
+|  [AWS Lambda](http://docs.aws.amazon.com/lambda/latest/dg/lambda-auth-and-access-control.html)  | Yes | Yes | Yes² | No | Yes | [Yes](http://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/lambda-edge-permissions.html#using-service-linked-roles) | 
 |  [Amazon Lightsail](https://lightsail.aws.amazon.com/ls/docs/all) | Yes | No | No | No | Yes | No | 
 
 ¹ Amazon EC2 service\-linked roles cannot be created using the AWS Management Console, and can be used only for the following features: [Scheduled Instances](http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-scheduled-instances.html#service-linked-roles-scheduled-instances), [Spot Instance Requests](http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/spot-requests.html#service-linked-roles-spot-instance-requests), [Spot Fleet Requests](http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/spot-fleet-requests.html#service-linked-roles-spot-fleet-requests) 
@@ -104,19 +104,21 @@ The AWS services listed below are grouped by their [AWS product categories](http
 |  [Amazon CloudWatch](http://docs.aws.amazon.com/AmazonCloudWatch/latest/DeveloperGuide/UsingIAM.html)  | Yes | No | No | No | Yes | [Yes](http://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/using-service-linked-roles.html)¹ | 
 |  [Amazon CloudWatch Events](http://docs.aws.amazon.com/AmazonCloudWatch/latest/DeveloperGuide/EventsPoliciesRolesAccessControl.html)  | Yes | Yes | No | No | Yes | No | 
 |  [Amazon CloudWatch Logs ](http://docs.aws.amazon.com/AmazonCloudWatch/latest/logs/auth-and-access-control-cwl.html)  | Yes | Yes | No | No | Yes | No | 
-|  [AWS Config](http://docs.aws.amazon.com/config/latest/developerguide/recommended-iam-permissions-using-aws-config-console-cli.html)  | Yes | No | No | No | Yes | No | 
+|  [AWS Config](http://docs.aws.amazon.com/config/latest/developerguide/recommended-iam-permissions-using-aws-config-console-cli.html)  | Yes | Yes² | No | No | Yes | [Yes](http://docs.aws.amazon.com/config/latest/developerguide/using-service-linked-roles.html) | 
 |  [AWS Health](http://docs.aws.amazon.com/health/latest/ug/controlling-access.html)  | Yes | No | No | No | Yes | No | 
 |  [AWS OpsWorks](http://docs.aws.amazon.com/opsworks/latest/userguide/opsworks-security-users.html)  | Yes | Yes | Yes | No | Yes | No | 
 |  [AWS OpsWorks for Chef Automate](http://docs.aws.amazon.com/opsworks/latest/userguide/opsworks-security-users.html)  | Yes | Yes | Yes | No | Yes | No | 
 |  [AWS Service Catalog](http://docs.aws.amazon.com/servicecatalog/latest/adminguide/permissions.html)  | Yes | No | No | No | Yes | No | 
 |  [AWS Systems Manager](http://docs.aws.amazon.com/systems-manager/latest/userguide/auth-and-access-control.html)  | Yes | Yes | No | Yes | Yes | [Yes](http://docs.aws.amazon.com/systems-manager/latest/userguide/using-service-linked-roles.html) | 
-| [AWS Trusted Advisor](https://aws.amazon.com/premiumsupport/ta-iam/) | Yes² | Yes | No | No | Yes³ | No | 
+| [AWS Trusted Advisor](https://aws.amazon.com/premiumsupport/ta-iam/) | Yes³ | Yes | No | No | Yes⁴ | [Yes](http://docs.aws.amazon.com/awssupport/latest/user/using-service-linked-roles-ta.html) | 
 
 ¹ Amazon CloudWatch service\-linked roles cannot be created using the AWS Management Console, and support only the [ Alarm Actions](http://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/UsingAlarmActions.html) feature\.
 
-² API access to Trusted Advisor is through the AWS Support API and is controlled by AWS Support IAM policies\.
+² AWS Config supports resource\-level permissions for only multi\-account multi\-region data aggregation\. For a list of supported resources, see the **Multi\-Account Multi\-Region Data Aggregation** section of [AWS Config API Guide](http://docs.aws.amazon.com/config/latest/APIReference/Welcome.html)\.
 
-³ Trusted Advisor supports the following tagging condition: `ssm:resourceTag` for Key/Value pairs and `ssm:Overwrite`\.
+³ API access to Trusted Advisor is through the AWS Support API and is controlled by AWS Support IAM policies\.
+
+⁴ Trusted Advisor supports the following tagging condition: `ssm:resourceTag` for Key/Value pairs and `ssm:Overwrite`\.
 
 ## Media Services<a name="media_svcs"></a>
 
@@ -141,11 +143,11 @@ The AWS services listed below are grouped by their [AWS product categories](http
 |  [Amazon Machine Learning](http://docs.aws.amazon.com/machine-learning/latest/dg/reference.html#controlling-access-to-amazon-ml-resources-by-using-iam)  | Yes | Yes | No | Yes | Yes | No | 
 |  [Amazon Polly](http://docs.aws.amazon.com/polly/latest/dg/authentication-and-access-control.html)  | Yes | Yes | No | No | Yes | No | 
 |  [Amazon Rekognition](http://docs.aws.amazon.com/rekognition/latest/dg/authentication-and-access-control.html)  | Yes | Yes | No | No | No | No | 
-|  [Amazon SageMaker](http://docs.aws.amazon.com/sagemaker/latest/dg/authentication-and-access-control.html)  | Yes | Yes¹ | No | No | Yes | No | 
+|  [Amazon SageMaker](http://docs.aws.amazon.com/sagemaker/latest/dg/authentication-and-access-control.html)  | Yes | Yes | No | Yes¹ | Yes | No | 
 | [Amazon Transcribe](http://docs.aws.amazon.com/transcribe/latest/dg/auth-and-access-control.html) | Yes | No | No | No | Yes | No | 
 | [Amazon Translate](http://docs.aws.amazon.com/translate/latest/dg/auth-and-access-control.html)  | Yes | No | No | No | Yes | No | 
 
-¹ Amazon SageMaker does not check external resources referenced in a call\. For example, Amazon SageMaker does not support policies that restrict training jobs to certain AWS KMS keys or Amazon S3 buckets\.
+¹ Amazon SageMaker does not support using tag\-based authorization for calls to `InvokeEndpoint`\.
 
 ## Analytics Services<a name="analytics_svcs"></a>
 
@@ -172,7 +174,7 @@ The AWS services listed below are grouped by their [AWS product categories](http
 |  Service  |  Actions  |  Resource\-level permissions  | Resource\-based policies |  Authorization based on tags  |  Temporary credentials  |  Service\-linked roles  | 
 |  [AWS Artifact](http://docs.aws.amazon.com/artifact/latest/ug/getting-started.html)  | Yes | Yes | No | No | Yes | No | 
 |  [AWS Certificate Manager \(ACM\)](http://docs.aws.amazon.com/acm/latest/userguide/assets.html)  | Yes | Yes | No | No | Yes | No | 
-|  [AWS CloudHSM](http://docs.aws.amazon.com/cloudhsm/latest/userguide/prerequisites.html#permissions-for-cloudhsm)  | Yes | No | No | No | Yes | No | 
+|  [AWS CloudHSM](http://docs.aws.amazon.com/cloudhsm/latest/userguide/prerequisites.html#permissions-for-cloudhsm)  | Yes | No | No | No | Yes | Yes | 
 |  [AWS CloudHSM Classic](http://docs.aws.amazon.com/cloudhsm/classic/userguide/iam-policy.html)  | Yes | No | No | No | No | No | 
 |  [Amazon Cognito](http://docs.aws.amazon.com/cognito/devguide/resource-permissions/)  | Yes | Yes | No | No | Yes | No | 
 |  [AWS Directory Service](http://docs.aws.amazon.com/directoryservice/latest/admin-guide/iam_policy.html)  | Yes | No | No | No | Yes | No | 
@@ -180,9 +182,10 @@ The AWS services listed below are grouped by their [AWS product categories](http
 |  [AWS Identity and Access Management \(IAM\)](http://docs.aws.amazon.com/IAM/latest/UserGuide/access_permissions-required.html)  | Yes | Yes | No | No | Yes² | No | 
 |  [Amazon Inspector](http://docs.aws.amazon.com/inspector/latest/userguide/inspector_introduction.html)  | Yes | No | No | No | Yes | [Yes](http://docs.aws.amazon.com/inspector/latest/userguide/inspector_slr.html) | 
 |  [AWS Key Management Service \(AWS KMS\)](http://docs.aws.amazon.com/kms/latest/developerguide/key-policies.html)  | Yes | Yes | Yes | No | Yes | No | 
+|  [Amazon Macie ](http://docs.aws.amazon.com/macie/latest/userguide/macie-access-control.html)  | Yes | No | No | No | Yes | Yes | 
 | [AWS Organizations](http://docs.aws.amazon.com/organizations/latest/userguide/orgs_permissions_overview.html) | Yes | Yes | No | No | Yes | Yes | 
-| [AWS Secrets Manager](http://docs.aws.amazon.com/secretsmanager/latest/userguide/auth-and-access.html) | Yes | Yes | No | Yes | Yes | No | 
-|  [AWS Single Sign\-On \(AWS SSO\)](http://docs.aws.amazon.com/singlesignon/latest/userguide/iam-auth-access.html)  | Yes | No | Yes | No | Yes | No | 
+| [AWS Secrets Manager](http://docs.aws.amazon.com/secretsmanager/latest/userguide/auth-and-access.html) | Yes | Yes | No | Yes | Yes | [Yes](http://docs.aws.amazon.com/secretsmanager/latest/userguide/auth-and-access_resource-based-policies.html               ) | 
+|  [AWS Single Sign\-On \(AWS SSO\)](http://docs.aws.amazon.com/singlesignon/latest/userguide/iam-auth-access.html)  | Yes | No | No | No | Yes | Yes | 
 |  [AWS Security Token Service \(AWS STS\)](http://docs.aws.amazon.com/STS/latest/UsingSTS/TokenPermissions.html)  | Yes | Yes³ | No | No | Yes⁴ | No | 
 |  [AWS Shield Advanced](http://docs.aws.amazon.com/waf/latest/developerguide/shield-chapter.html)  | Yes | No | No | No | Yes | No | 
 |  [AWS WAF](http://docs.aws.amazon.com/waf/latest/developerguide/waf-auth-and-access-control.html)  | Yes | Yes | No | No | Yes | No | 
@@ -252,7 +255,7 @@ The AWS services listed below are grouped by their [AWS product categories](http
 |  [AWS Greengrass](http://docs.aws.amazon.com/greengrass/latest/userguide/gg-ug.html)  | Yes | Yes | Yes | No | Yes | No | 
 |  [AWS IoT](http://docs.aws.amazon.com/iot/latest/developerguide/iot-security-identity.html)  | [Yes](http://docs.aws.amazon.com/iot/latest/developerguide/policy-actions.html) | [Yes](http://docs.aws.amazon.com/iot/latest/developerguide/action-resources.html) | Yes¹ | No | Yes | No | 
 
-¹ Devices connected to AWS IoT are authenticated by using X\.509 certificates\. You can attach AWS IoT policies to an X\.509 certificate to control what the device is authorized to do\. For more information, see [Create an AWS IoT Policy](http://docs.aws.amazon.com/iot/latest/developerguide/create-iot-policy.html) in the *AWS IoT Developer Guide*\. 
+¹ Devices connected to AWS IoT are authenticated by using X\.509 certificates or using Amazon Cognito Identities\. You can attach AWS IoT policies to an X\.509 certificate or Amazon Cognito Identity to control what the device is authorized to do\. For more information, see [Security and Identity for AWS IoT](http://docs.aws.amazon.com/iot/latest/developerguide/iot-security-identity.html) in the *AWS IoT Developer Guide*\. 
 
 ## Game Development Services<a name="game_svcs"></a>
 
@@ -277,4 +280,4 @@ The AWS services listed below are grouped by their [AWS product categories](http
 | --- |--- |--- |--- |--- |--- |--- |
 |  Service  |  Actions  |  Resource\-level permissions  | Resource\-based policies |  Authorization based on tags  |  Temporary credentials  |  Service\-linked roles  | 
 |  [AWS Billing and Cost Management](http://docs.aws.amazon.com/awsaccountbilling/latest/aboutv2/ControllingAccessWebsite.html)  | Yes | No | No | No | Yes | No | 
-|  [AWS Support](http://docs.aws.amazon.com/awssupport/latest/user/getting-started.html#accessing-support)  | No | No | No | No | Yes | No | 
+|  [AWS Support](http://docs.aws.amazon.com/awssupport/latest/user/getting-started.html#accessing-support)  | No | No | No | No | Yes | [Yes](http://docs.aws.amazon.com/awssupport/latest/user/using-service-linked-roles-sup.html) | 
