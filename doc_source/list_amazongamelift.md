@@ -3,69 +3,55 @@
 Amazon GameLift \(service prefix: `gamelift`\) provides the following service\-specific resources, actions, and condition context keys for use in IAM permission policies\.
 
 References:
-+ Learn how to [configure this service](http://docs.aws.amazon.com/gamelift/latest/developerguide/)\.
-+ View a [list of the API operations available for this service](http://docs.aws.amazon.com/gamelift/latest/apireference/)\.
-+ Learn how to protect this service and its resources by [using IAM](http://docs.aws.amazon.com/gamelift/latest/developerguide/access_permissions.html) permission policies\.
++ Learn how to [configure this service](https://docs.aws.amazon.com/gamelift/latest/developerguide/)\.
++ View a list of the [API operations available for this service](https://docs.aws.amazon.com/gamelift/latest/apireference/)\.
++ Learn how to secure this service and its resources by [using IAM](https://docs.aws.amazon.com/gamelift/latest/developerguide/access_permissions.html) permission policies\.
 
 **Topics**
 + [Actions Defined by Amazon GameLift](#amazongamelift-actions-as-permissions)
-+ [Resources Defined by GameLift](#amazongamelift-resources-for-iam-policies)
++ [Resource Types Defined by Amazon GameLift](#amazongamelift-resources-for-iam-policies)
 + [Condition Keys for Amazon GameLift](#amazongamelift-policy-keys)
 
 ## Actions Defined by Amazon GameLift<a name="amazongamelift-actions-as-permissions"></a>
 
-You can specify the following actions in the `Action` element of an IAM policy statement\. By using policies, you define the permissions for anyone performing an operation in AWS\. When you use an action in a policy, you usually allow or deny access to the API operation or CLI command with the same name\. However, in some cases, a single action controls access to more than one operation\. Alternatively, some operations require several different actions\. For details about the columns in the following table, see [The Actions Table](reference_policies_actions-resources-contextkeys.md#actions_table)\.
+You can specify the following actions in the `Action` element of an IAM policy statement\. Use policies to grant permissions to perform an operation in AWS\. When you use an action in a policy, you usually allow or deny access to the API operation or CLI command with the same name\. However, in some cases, a single action controls access to more than one operation\. Alternatively, some operations require several different actions\.
+
+The **Resource Types** column indicates whether each action supports resource\-level permissions\. If there is no value for this column, you must specify all resources \("\*"\) in the `Resource` element of your policy statement\. If the column includes a resource type, then you can specify an ARN of that type in a statement with that action\. Required resources are indicated in the table with an asterisk \(\*\)\. If you specify a resource\-level permission ARN in a statement using this action, then it must be of this type\. Some actions support multiple resource types\. If the resource type is optional \(not indicated as required\), then you can choose to use one but not the other\.
+
+For details about the columns in the following table, see [The Actions Table](reference_policies_actions-resources-contextkeys.md#actions_table)\.
+
+
+****  
+[\[See the AWS documentation website for more details\]](http://docs.aws.amazon.com/IAM/latest/UserGuide/list_amazongamelift.html)
+
+## Resource Types Defined by Amazon GameLift<a name="amazongamelift-resources-for-iam-policies"></a>
+
+The following resource types are defined by this service and can be used in the `Resource` element of IAM permission policy statements\. Each action in the [Actions table](#amazongamelift-actions-as-permissions) identifies the resource types that can be specified with that action\. A resource type can also define which condition keys you can include in a policy\. These keys are displayed in the last column of the table\. For details about the columns in the following table, see [The Resource Types Table](reference_policies_actions-resources-contextkeys.md#resources_table)\.
 
 
 ****  
 
-| Actions | Description | Access Level | Resource Types \(\*required\) | Condition Keys | Dependent Actions | 
-| --- | --- | --- | --- | --- | --- | 
-|   [ CreateAlias ](http://docs.aws.amazon.com/gamelift/latest/apireference/API_CreateAlias.html)  | Creates an alias for a fleet | Write |  |  |  | 
-|   [ CreateBuild ](http://docs.aws.amazon.com/gamelift/latest/apireference/API_CreateBuild.html)  | Initializes a new build record and generates information required to upload a game build to Amazon GameLift | Write |  |  |  | 
-|   [ CreateFleet ](http://docs.aws.amazon.com/gamelift/latest/apireference/API_CreateFleet.html)  | Creates a new fleet of computing resources to run your game servers | Write |  |  |  | 
-|   [ CreateGameSession ](http://docs.aws.amazon.com/gamelift/latest/apireference/API_CreateGameSession.html)  | Creates a game session for players to join | Write |  |  |  | 
-|   [ CreatePlayerSession ](http://docs.aws.amazon.com/gamelift/latest/apireference/API_CreatePlayerSession.html)  | Adds a player to a game session | Write |  |  |  | 
-|   [ CreatePlayerSessions ](http://docs.aws.amazon.com/gamelift/latest/apireference/API_CreatePlayerSessions.html)  | Adds a group of players to a game session | Write |  |  |  | 
-|   [ DeleteAlias ](http://docs.aws.amazon.com/gamelift/latest/apireference/API_DeleteAlias.html)  | Deletes an alias | Write |  |  |  | 
-|   [ DeleteBuild ](http://docs.aws.amazon.com/gamelift/latest/apireference/API_DeleteBuild.html)  | Deletes a build | Write |  |  |  | 
-|   [ DeleteFleet ](http://docs.aws.amazon.com/gamelift/latest/apireference/API_DeleteFleet.html)  | Deletes an empty fleet | Write |  |  |  | 
-|   [ DeleteScalingPolicy ](http://docs.aws.amazon.com/gamelift/latest/apireference/API_DeleteScalingPolicy.html)  | Deletes a set of scaling rules | Write |  |  |  | 
-|   [ DescribeAlias ](http://docs.aws.amazon.com/gamelift/latest/apireference/API_DescribeAlias.html)  | Retrieves properties for an alias | Read |  |  |  | 
-|   [ DescribeBuild ](http://docs.aws.amazon.com/gamelift/latest/apireference/API_DescribeBuild.html)  | Retrieves properties for a build | Read |  |  |  | 
-|   [ DescribeEC2InstanceLimits ](http://docs.aws.amazon.com/gamelift/latest/apireference/API_DescribeEC2InstanceLimits.html)  | Retrieves maximum allowed usage and current usage for all EC2 instance types or a specified type | Read |  |  |  | 
-|   [ DescribeFleetAttributes ](http://docs.aws.amazon.com/gamelift/latest/apireference/API_DescribeFleetAttributes.html)  | Retrieves general fleet properties for a fleet | Read |  |  |  | 
-|   [ DescribeFleetCapacity ](http://docs.aws.amazon.com/gamelift/latest/apireference/API_DescribeFleetCapacity.html)  | Retrieves the current capacity status for a fleet | Read |  |  |  | 
-|   [ DescribeFleetEvents ](http://docs.aws.amazon.com/gamelift/latest/apireference/API_DescribeFleetEvents.html)  | Retrieves entries from a fleet's event log | Read |  |  |  | 
-|   [ DescribeFleetPortSettings ](http://docs.aws.amazon.com/gamelift/latest/apireference/API_DescribeFleetPortSettings.html)  | Retrieves the inbound connection permissions set for a fleet | Read |  |  |  | 
-|   [ DescribeFleetUtilization ](http://docs.aws.amazon.com/gamelift/latest/apireference/API_DescribeFleetUtilization.html)  | Retrieves utilization statistics for a fleet | Read |  |  |  | 
-|   [ DescribeGameSessionDetails ](http://docs.aws.amazon.com/gamelift/latest/apireference/API_DescribeGameSessionDetails.html)  | Retrieves game session properties plus game session protection policy | Read |  |  |  | 
-|   [ DescribeGameSessions ](http://docs.aws.amazon.com/gamelift/latest/apireference/API_DescribeGameSessions.html)  | Retrieves game session properties for a fleet | Read |  |  |  | 
-|   [ DescribeInstances ](http://docs.aws.amazon.com/gamelift/latest/apireference/API_DescribeInstances.html)  | Retrieves information about a fleet's instances, including instance IDs\. | Read |  |  |  | 
-|   [ DescribePlayerSessions ](http://docs.aws.amazon.com/gamelift/latest/apireference/API_DescribePlayerSessions.html)  | Retrieves player session properties for a game session | Read |  |  |  | 
-|   [ DescribeRuntimeConfiguration ](http://docs.aws.amazon.com/gamelift/latest/apireference/API_DescribeRuntimeConfiguration.html)  | Retrieves the runtime configuration for a fleet | Read |  |  |  | 
-|   [ DescribeScalingPolicies ](http://docs.aws.amazon.com/gamelift/latest/apireference/API_DescribeScalingPolicies.html)  | Retrieves all scaling policies applied to a fleet | Read |  |  |  | 
-|   [ GetGameSessionLogUrl ](http://docs.aws.amazon.com/gamelift/latest/apireference/API_GetGameSessionLogUrl.html)  | Retrieves the location of stored logs for a game session | Read |  |  |  | 
-|   [ GetInstanceAccess ](http://docs.aws.amazon.com/gamelift/latest/apireference/API_GetInstanceAccess.html)  | Requests remote access to a fleet instance\. | Read |  |  |  | 
-|   [ ListAliases ](http://docs.aws.amazon.com/gamelift/latest/apireference/API_ListAliases.html)  | Retrieves the fleet aliases used with this AWS account | List |  |  |  | 
-|   [ ListBuilds ](http://docs.aws.amazon.com/gamelift/latest/apireference/API_ListBuilds.html)  | Retrieves the builds for this AWS account | List |  |  |  | 
-|   [ ListFleets ](http://docs.aws.amazon.com/gamelift/latest/apireference/API_ListFleets.html)  | Retrieves the fleet for this AWS account | List |  |  |  | 
-|   [ PutScalingPolicy ](http://docs.aws.amazon.com/gamelift/latest/apireference/API_PutScalingPolicy.html)  | Creates or updates a fleet scaling policy | Write |  |  |  | 
-|   [ RequestUploadCredentials ](http://docs.aws.amazon.com/gamelift/latest/apireference/API_RequestUploadCredentials.html)  | Retrieves a fresh set of upload credentials and the Amazon S3 storage location for a specific build | Read |  |  |  | 
-|   [ ResolveAlias ](http://docs.aws.amazon.com/gamelift/latest/apireference/API_ResolveAlias.html)  | Retrieves the fleet ID associated with an alias | Read |  |  |  | 
-|   [ SearchGameSessions ](http://docs.aws.amazon.com/gamelift/latest/apireference/API_SearchGameSessions.html)  | Retrieves game sessions that match the search criteria and sorts them as specified | Read |  |  |  | 
-|   [ UpdateAlias ](http://docs.aws.amazon.com/gamelift/latest/apireference/API_UpdateAlias.html)  | Updates properties for an alias | Write |  |  |  | 
-|   [ UpdateBuild ](http://docs.aws.amazon.com/gamelift/latest/apireference/API_UpdateBuild.html)  | Updates a build's name and version | Write |  |  |  | 
-|   [ UpdateFleetAttributes ](http://docs.aws.amazon.com/gamelift/latest/apireference/API_UpdateFleetAttributes.html)  | Sets a fleet's general properties | Write |  |  |  | 
-|   [ UpdateFleetCapacity ](http://docs.aws.amazon.com/gamelift/latest/apireference/API_UpdateFleetCapacity.html)  | Sets a fleet's capacity settings | Write |  |  |  | 
-|   [ UpdateFleetPortSettings ](http://docs.aws.amazon.com/gamelift/latest/apireference/API_UpdateFleetPortSettings.html)  | Sets a fleet's port settings | Write |  |  |  | 
-|   [ UpdateGameSession ](http://docs.aws.amazon.com/gamelift/latest/apireference/API_UpdateGameSession.html)  | Sets game session properties | Write |  |  |  | 
-|   [ UpdateRuntimeConfiguration ](http://docs.aws.amazon.com/gamelift/latest/apireference/API_UpdateRuntimeConfiguration.html)  | Sets a fleet's runtime configuration, which specifies how to launch server processes on the fleet | Write |  |  |  | 
-
-## Resources Defined by GameLift<a name="amazongamelift-resources-for-iam-policies"></a>
-
-Amazon GameLift has no service\-defined resources that can be used as the `Resource` element of an IAM policy statement\.
+| Resource Types | ARN | Condition Keys | 
+| --- | --- | --- | 
+|   [ alias ](https://docs.aws.amazon.com/gamelift/latest/developerguide/resources-defined.html)  |  arn:$\{Partition\}:gamelift:$\{Region\}::alias/$\{AliasId\}  |   [ aws:ResourceTag/$\{TagKey\} ](#amazongamelift-aws_ResourceTag___TagKey_)   | 
+|   [ build ](https://docs.aws.amazon.com/gamelift/latest/developerguide/resources-defined.html)  |  arn:$\{Partition\}:gamelift:$\{Region\}:$\{AccountId\}:build/$\{BuildId\}  |   [ aws:ResourceTag/$\{TagKey\} ](#amazongamelift-aws_ResourceTag___TagKey_)   | 
+|   [ script ](https://docs.aws.amazon.com/gamelift/latest/developerguide/resources-defined.html)  |  arn:$\{Partition\}:gamelift:$\{Region\}:$\{AccountId\}:script/$\{ScriptId\}  |   [ aws:ResourceTag/$\{TagKey\} ](#amazongamelift-aws_ResourceTag___TagKey_)   | 
+|   [ fleet ](https://docs.aws.amazon.com/gamelift/latest/developerguide/resources-defined.html)  |  arn:$\{Partition\}:gamelift:$\{Region\}:$\{Account\}:fleet/$\{FleetId\}  |   [ aws:ResourceTag/$\{TagKey\} ](#amazongamelift-aws_ResourceTag___TagKey_)   | 
+|   [ gameSessionQueue ](https://docs.aws.amazon.com/gamelift/latest/developerguide/resources-defined.html)  |  arn:$\{Partition\}:gamelift:$\{Region\}:$\{Account\}:gamesessionqueue/$\{GameSessionQueueName\}  |   [ aws:ResourceTag/$\{TagKey\} ](#amazongamelift-aws_ResourceTag___TagKey_)   | 
+|   [ matchmakingConfiguration ](https://docs.aws.amazon.com/gamelift/latest/developerguide/resources-defined.html)  |  arn:$\{Partition\}:gamelift:$\{Region\}:$\{Account\}:matchmakingconfiguration/$\{MatchmakingConfigurationName\}  |   [ aws:ResourceTag/$\{TagKey\} ](#amazongamelift-aws_ResourceTag___TagKey_)   | 
+|   [ matchmakingRuleSet ](https://docs.aws.amazon.com/gamelift/latest/developerguide/resources-defined.html)  |  arn:$\{Partition\}:gamelift:$\{Region\}:$\{Account\}:matchmakingruleset/$\{MatchmakingRuleSetName\}  |   [ aws:ResourceTag/$\{TagKey\} ](#amazongamelift-aws_ResourceTag___TagKey_)   | 
 
 ## Condition Keys for Amazon GameLift<a name="amazongamelift-policy-keys"></a>
 
-GameLift has no service\-specific context keys that can be used in the `Condition` element of policy statements\. For the list of the global context keys that are available to all services, see [Available Keys for Conditions](reference_policies_condition-keys.html#AvailableKeys) in the *IAM Policy Reference*\.
+Amazon GameLift defines the following condition keys that can be used in the `Condition` element of an IAM policy\. You can use these keys to further refine the conditions under which the policy statement applies\. For details about the columns in the following table, see [The Condition Keys Table](reference_policies_actions-resources-contextkeys.md#context_keys_table)\.
+
+To view the global condition keys that are available to all services, see [Available Global Condition Keys](reference_policies_condition-keys.html#AvailableKeys) in the *IAM Policy Reference*\.
+
+
+****  
+
+| Condition Keys | Description | Type | 
+| --- | --- | --- | 
+|   [ aws:RequestTag/$\{TagKey\} ](https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_condition-keys.html#condition-keys-requesttag)  | Filters actions based on the tags that are passed in the request | String | 
+|   [ aws:ResourceTag/$\{TagKey\} ](https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_condition-keys.html#condition-keys-resourcetag)  | Filters actions based on the tags associated with the resource | String | 
+|   [ aws:TagKeys ](https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_condition-keys.html#condition-keys-tagkeys)  | Filters actions based on the tag keys that are passed in the request | String | 

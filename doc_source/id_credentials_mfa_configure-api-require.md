@@ -18,11 +18,11 @@ Adding MFA protection to API operations involves these tasks:
 
 1. The administrator creates policies for the users that include a `Condition` element that checks whether the user authenticated with an AWS MFA device\.
 
-1. The user calls one of the AWS STS API operations that support the MFA parameters [AssumeRole](http://docs.aws.amazon.com/STS/latest/APIReference/API_AssumeRole.html) or [GetSessionToken](http://docs.aws.amazon.com/STS/latest/APIReference/API_GetSessionToken.html), depending on the scenario for MFA protection, as explained later\. As part of the call, the user includes the device identifier for the device that's associated with the user\. The user also includes the time\-based one\-time password \(TOTP\) that the device generates\. In either case, the user gets back temporary security credentials that the user can then use to make additional requests to AWS\.
+1. The user calls one of the AWS STS API operations that support the MFA parameters [AssumeRole](https://docs.aws.amazon.com/STS/latest/APIReference/API_AssumeRole.html) or [GetSessionToken](https://docs.aws.amazon.com/STS/latest/APIReference/API_GetSessionToken.html), depending on the scenario for MFA protection, as explained later\. As part of the call, the user includes the device identifier for the device that's associated with the user\. The user also includes the time\-based one\-time password \(TOTP\) that the device generates\. In either case, the user gets back temporary security credentials that the user can then use to make additional requests to AWS\.
 **Note**  
-MFA protection for a service's API operations is available only if the service supports temporary security credentials\. For a list of these services, see [ Using Temporary Security Credentials to Access AWS](http://docs.aws.amazon.com/STS/latest/UsingSTS/UsingTokens.html)\.
+MFA protection for a service's API operations is available only if the service supports temporary security credentials\. For a list of these services, see [ Using Temporary Security Credentials to Access AWS](https://docs.aws.amazon.com/STS/latest/UsingSTS/UsingTokens.html)\.
 
-If authorization fails, AWS returns an "Access Denied" error message \(as it does for any unauthorized access\)\. With MFA\-protected API policies in place, AWS denies access to the API operations specified in the policies if the user attempts to call an API operation without valid MFA authentication\. The operation is also denied if the timestamp of the request for the API operation is outside of the allowed range specified in the policy\. The user must be reauthenticated with MFA by requesting new temporary security credentials with an MFA code and device serial number\.
+If authorization fails, AWS returns an access denied error message \(as it does for any unauthorized access\)\. With MFA\-protected API policies in place, AWS denies access to the API operations specified in the policies if the user attempts to call an API operation without valid MFA authentication\. The operation is also denied if the time stamp of the request for the API operation is outside of the allowed range specified in the policy\. The user must be reauthenticated with MFA by requesting new temporary security credentials with an MFA code and device serial number\.
 
 ### IAM Policies with MFA Conditions<a name="MFAProtectedAPI-policies"></a>
 
@@ -49,7 +49,7 @@ The following example shows the trust policy of an IAM role that includes an MFA
 }
 ```
 
-For more information on the condition types for MFA, see [AWS Global Condition Context Keys](reference_policies_condition-keys.md), [Numeric Condition Operators](reference_policies_elements_condition_operators.md#Conditions_Numeric), and [Condition Operator to Check Existence of Condition Keys ](reference_policies_elements_condition_operators.md#Conditions_Null) 
+For more information on the condition types for MFA, see [AWS Global Condition Context Keys](reference_policies_condition-keys.md), [Numeric Condition Operators](reference_policies_elements_condition_operators.md#Conditions_Numeric), and [Condition Operator to Check Existence of Condition Keys ](reference_policies_elements_condition_operators.md#Conditions_Null)\. 
 
 ### Choosing Between GetSessionToken and AssumeRole<a name="scenarios"></a>
 
@@ -71,12 +71,13 @@ Details about how to implement these scenarios are provided later in this docume
 It's important to understand the following aspects of MFA protection for API operations:
 + MFA protection is available only with temporary security credentials, which must be obtained with `AssumeRole` or `GetSessionToken`\. 
 + You cannot use MFA\-protected API access with AWS account root user credentials\.
++ You cannot use MFA\-protected API access with U2F security keys\.
 + Federated users cannot be assigned an MFA device for use with AWS services, so they cannot access AWS resources controlled by MFA\. \(See next point\.\) 
 + Other AWS STS API operations that return temporary credentials do not support MFA\. For `AssumeRoleWithWebIdentity` and `AssumeRoleWithSAML`, the user is authenticated by an external provider and AWS cannot determine whether that provider required MFA\. For `GetFederationToken`, MFA is not necessarily associated with a specific user\. 
 + Similarly, long\-term credentials \(IAM user access keys and root user access keys\) cannot be used with MFA\-protected API access because they don't expire\.
 + `AssumeRole` and `GetSessionToken` can also be called without MFA information\. In that case, the caller gets back temporary security credentials, but the session information for those temporary credentials does not indicate that the user authenticated with MFA\.
 + To establish MFA protection for API operations, you add MFA conditions to policies\. A policy must include the `aws:MultiFactorAuthPresent` condition key to enforce the use of MFA\. For cross\-account delegation, the role's trust policy must include the condition key\.
-+ When you allow another AWS account to access resources in your account, the security of your resources depends on the configuration of the trusted account—that is, the other account \(not yours\)\. This is true even when you require multi\-factor authentication\. Any identity in the trusted account that has permission to create virtual MFA devices can construct an MFA claim to satisfy that part of your role's trust policy\. Before you allow members of another account access to your AWS resources that require multi\-factor authentication, you should ensure that the trusted account's owner follows security best practices\. For example, the trusted account should restrict access to sensitive API operations, such as MFA device\-management API operations, to specific, trusted identities\.
++ When you allow another AWS account to access resources in your account, the security of your resources depends on the configuration of the trusted account \(the other account, not yours\)\. This is true even when you require multi\-factor authentication\. Any identity in the trusted account that has permission to create virtual MFA devices can construct an MFA claim to satisfy that part of your role's trust policy\. Before you allow members of another account access to your AWS resources that require multi\-factor authentication, you should ensure that the trusted account's owner follows security best practices\. For example, the trusted account should restrict access to sensitive API operations, such as MFA device\-management API operations, to specific, trusted identities\.
 + If a policy includes an MFA condition, a request is denied if users have not been MFA authenticated, or if they provide an invalid MFA device identifier or invalid TOTP\.
 
 ## Scenario: MFA Protection for Cross\-Account Delegation<a name="MFAProtectedAPI-cross-account-delegation"></a>
@@ -99,9 +100,9 @@ Imagine that you have account A \(the trusting account that owns the resource to
    }
    ```
 
-1. Anaya adds a permission policy to the role that specifies what the role is allowed to do\. The permission policy for a role with MFA protection is no different than any other role\-permission policy\. The following example shows the policy that Anaya adds to the role; it allows an assuming user to perform any DynamoDB action on the table `Books` in account B\. This policy also allows the `dynamodb:ListTables` action, which is required to perform actions in the console\. 
+1. Anaya adds a permissions policy to the role that specifies what the role is allowed to do\. The permissions policy for a role with MFA protection is no different than any other role\-permission policy\. The following example shows the policy that Anaya adds to the role; it allows an assuming user to perform any Amazon DynamoDB action on the table `Books` in account A\. This policy also allows the `dynamodb:ListTables` action, which is required to perform actions in the console\. 
 **Note**  
-The permission policy does not include an MFA condition\. It is important to understand that the MFA authentication is used only to determine whether a user can assume the role\. Once the user has assumed the role, no further MFA checks are made\. 
+The permissions policy does not include an MFA condition\. It is important to understand that the MFA authentication is used only to determine whether a user can assume the role\. Once the user has assumed the role, no further MFA checks are made\. 
 
    ```
    {
@@ -111,7 +112,7 @@ The permission policy does not include an MFA condition\. It is important to und
                "Sid": "TableActions",
                "Effect": "Allow",
                "Action": "dynamodb:*",
-               "Resource": "arn:aws:dynamodb:*:ACCOUNT-B-ID:table/Books"
+               "Resource": "arn:aws:dynamodb:*:ACCOUNT-A-ID:table/Books"
            },
            {
                "Sid": "ListTable",
@@ -123,7 +124,7 @@ The permission policy does not include an MFA condition\. It is important to und
    }
    ```
 
-1. In trusted account B, the administrator makes sure that IAM user Bob is configured with an AWS MFA device and that he knows the ID of the device\. The device ID is the serial number if it's a hardware MFA device, or the device's ARN if it's a virtual MFA device\.
+1. In trusted account B, the administrator makes sure that IAM user Richard is configured with an AWS MFA device and that he knows the ID of the device\. The device ID is the serial number if it's a hardware MFA device, or the device's ARN if it's a virtual MFA device\.
 
 1. In account B, the administrator attaches the following policy to user Richard \(or a group that he's a member of\) that allows him to call the `AssumeRole` action\. The resource is set to the ARN of the role that Anaya created in step 1\. Notice that this policy does not contain an MFA condition\.
 
@@ -217,7 +218,7 @@ In this scenario, user Anaya is an administrator in account A\. User Nikhil is a
    }
    ```
 **Note**  
-Amazon S3 offers an MFA Delete feature for *root* account access \(only\)\. You can enable Amazon S3 MFA Delete when you set the versioning state of the bucket\. Amazon S3 MFA Delete cannot be applied to an IAM user, and is managed independently from MFA\-protected API access\. An IAM user with permissions to delete a bucket cannot delete a bucket with Amazon S3 MFA Delete enabled\. For more information on Amazon S3 MFA Delete, see [MFA Delete](http://docs.aws.amazon.com/AmazonS3/latest/dev/MultiFactorAuthenticationDelete.html)\.
+Amazon S3 offers an MFA Delete feature for *root* account access \(only\)\. You can enable Amazon S3 MFA Delete when you set the versioning state of the bucket\. Amazon S3 MFA Delete cannot be applied to an IAM user, and is managed independently from MFA\-protected API access\. An IAM user with permissions to delete a bucket cannot delete a bucket with Amazon S3 MFA Delete enabled\. For more information on Amazon S3 MFA Delete, see [MFA Delete](https://docs.aws.amazon.com/AmazonS3/latest/dev/MultiFactorAuthenticationDelete.html)\.
 
 1. In account C, an administrator makes sure that user Nikhil is configured with an AWS MFA device and that he knows the ID of the device\. The device ID is the serial number if it's a hardware MFA device, or the device's ARN if it's a virtual MFA device\. 
 

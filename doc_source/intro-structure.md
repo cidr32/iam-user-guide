@@ -3,6 +3,7 @@
 Before you create users, you should understand how IAM works\. IAM provides the infrastructure necessary to control authentication and authorization for your account\. The IAM infrastructure includes the following elements:
 
 **Topics**
++ [Terms](#intro-structure-terms)
 + [Principal](#intro-structure-principal)
 + [Request](#intro-structure-request)
 + [Authentication](#intro-structure-authentication)
@@ -12,16 +13,32 @@ Before you create users, you should understand how IAM works\. IAM provides the 
 
 ![\[IntroToIAM_Diagram\]](http://docs.aws.amazon.com/IAM/latest/UserGuide/images/intro-diagram _policies_800.png)
 
+## Terms<a name="intro-structure-terms"></a>
+
+Learn more about IAM terms\.
+
+Resources  
+The user, group, role, policy, and identity provider objects that are stored in IAM\. As with other AWS services, you can add, edit, and remove resources from IAM\.
+
+Identities  
+The IAM resource objects that are used to identify and group\. You can attach a policy to an IAM identity\. These include users, groups, and roles\.
+
+Entities  
+The IAM resource objects that AWS uses for authentication\. These include IAM users, federated users, and assumed IAM roles\. 
+
+Principals  
+A person or application that uses the AWS account root user, an IAM user, or an IAM role to sign in and make requests to AWS\.
+
 ## Principal<a name="intro-structure-principal"></a>
 
-A principal is an entity that can make a request for an action or operation on an AWS resource\. Users, roles, federated users, and applications are all AWS principals\. Your AWS account root user is your first *principal*\. As a best practice, do not use your root user for your daily work\. Instead, create IAM users and roles\. You can also support federated users or programmatic access to allow an application to access your AWS account\.
+A *principal* is a person or application that can make a request for an action or operation on an AWS resource\. The principal is authenticated as the AWS account root user or an IAM entity to make requests to AWS\. As a best practice, do not use your root user credentials for your daily work\. Instead, create IAM entities \(users and roles\)\. You can also support federated users or programmatic access to allow an application to access your AWS account\.
 
 ## Request<a name="intro-structure-request"></a>
 
 When a principal tries to use the AWS Management Console, the AWS API, or the AWS CLI, that principal sends a *request* to AWS\. The request includes the following information:
 + **Actions or operations** – The actions or operations that the principal wants to perform\. This can be an action in the AWS Management Console, or an operation in the AWS CLI or AWS API\.
 + **Resources** – The AWS resource object upon which the actions or operations are performed\.
-+ **Principal** – The user, role, federated user, or application that sent the request\. Information about the principal includes the policies that are associated with that principal\. 
++ **Principal** – The person or application that used an entity \(user or role\) to send the request\. Information about the principal includes the policies that are associated with the entity that the principal used to sign in\. 
 + **Environment data** – Information about the IP address, user agent, SSL enabled status, or the time of day\.
 + **Resource data** – Data related to the resource that is being requested\. This can include information such as a DynamoDB table name or a tag on an Amazon EC2 instance\.
 
@@ -29,25 +46,25 @@ AWS gathers the request information into a *request context*, which is used to e
 
 ## Authentication<a name="intro-structure-authentication"></a>
 
-As a principal, you must be authenticated \(signed in to AWS\) to send a request to AWS\. Although some services, such as Amazon S3 and AWS STS, allow a few requests from anonymous users, they are the exception to the rule\.
+A principal must be authenticated \(signed in to AWS\) using their credentials to send a request to AWS\. Some services, such as Amazon S3 and AWS STS, allow a few requests from anonymous users\. However, they are the exception to the rule\.
 
-To authenticate from the console as a user, you must sign in with your user name and password\. To authenticate from the API or AWS CLI, you must provide your access key and secret key\. You might also be required to provide additional security information\. For example, AWS recommends that you use multi\-factor authentication \(MFA\) to increase the security of your account\. To learn more about the IAM identities that AWS can authenticate, see [Identities \(Users, Groups, and Roles\)](id.md)\.
+To authenticate from the console as a root user, you must sign in with your email address and password\. As an IAM user, provide your account ID or alias, and then your user name and password\. To authenticate from the API or AWS CLI, you must provide your access key and secret key\. You might also be required to provide additional security information\. For example, AWS recommends that you use multi\-factor authentication \(MFA\) to increase the security of your account\. To learn more about the IAM entities that AWS can authenticate, see [IAM Users](id_users.md) and [IAM Roles](id_roles.md)\.
 
 ## Authorization<a name="intro-structure-authorization"></a>
 
-During authorization, AWS uses values from the request context to check for policies that apply to the request\. It then uses the policies to determine whether to allow or deny the request\. Most policies are stored in AWS as [JSON documents](access_policies.md#access_policies-json) and specify the permissions that are allowed or denied for principals\. There are [several types of policies](access_policies.md) that can affect whether a request is authorized\. Those policies types can be categorized as *permissions policies* or *permissions boundaries*\. Permissions policies define the permissions for the object to which they’re attached\. These include identity\-based policies \(the most common\), resource\-based policies, and ACLs\. A permissions boundary is an advanced feature that allows you to use policies to limit the maximum permissions that a principal can have\. These boundaries can be applied to AWS Organizations organizations or to IAM users or roles\.
+You must also be authorized \(allowed\) to complete your request\. During authorization, AWS uses values from the request context to check for policies that apply to the request\. It then uses the policies to determine whether to allow or deny the request\. Most policies are stored in AWS as [JSON documents](access_policies.md#access_policies-json) and specify the permissions for principal entities\. There are [several types of policies](access_policies.md) that can affect whether a request is authorized\. To provide your users with permissions to access the AWS resources in their own account, you need only identity\-based policies\. Resource\-based policies are popular for granting [cross\-account access](access_permissions-required.md#UserPermissionsAcrossAccounts)\. The other policy types are advanced features and should be used carefully\.
 
-To provide your users with permissions to access the AWS resources in their own account, you need only identity\-based policies\. Resource\-based policies are popular for granting [cross\-account access](access_permissions-required.md#UserPermissionsAcrossAccounts)\. The other policy types are advanced features and should be used carefully\.
-
-AWS checks each policy that applies to the context of your request\. If a single policy includes a denied action, AWS denies the entire request and stops evaluating\. This is called an *explicit deny*\. Because requests are *denied by default*, AWS authorizes your request only if every part of your request is allowed by the applicable policies\. The evaluation logic follows these rules:
+AWS checks each policy that applies to the context of your request\. If a single permissions policy includes a denied action, AWS denies the entire request and stops evaluating\. This is called an *explicit deny*\. Because requests are *denied by default*, AWS authorizes your request only if every part of your request is allowed by the applicable permissions policies\. The evaluation logic for a request within a single account follows these general rules:
 + By default, all requests are denied\. \(In general, requests made using the AWS account root user credentials for resources in the account are always allowed\.\) 
-+ An explicit allow in a permissions policy overrides this default\.
-+ A permissions boundary \(AWS Organizations SCP or user or role boundary\) overrides the allow\. If there is a permissions boundary that applies, that boundary must allow the request\. Otherwise, it is implicitly denied\.
++ An explicit allow in any permissions policy \(identity\-based or resource\-based\) overrides this default\.
++ The existence of an Organizations SCP, IAM permissions boundary, or a session policy overrides the allow\. If one or more of these policy types exists, they must all allow the request\. Otherwise, it is implicitly denied\.
 + An explicit deny in any policy overrides any allows\.
+
+To learn more about how all types of policies are evaluated, see [Policy Evaluation Logic](reference_policies_evaluation-logic.md)\. If you need to make a request in a different account, a policy in the other account must allow you to access the resource *and* the IAM entity that you use to make the request must have an identity\-based policy that allows the request\.
 
 ## Actions or Operations<a name="intro-structure-actions"></a>
 
-After your request has been authenticated and authorized, AWS approves the actions or operations in your request\. Operations are defined by a service, and include things that you can do to a resource, such as viewing, creating, editing, and deleting that resource\. For example, IAM supports about 40 actions for a user resource, including the following actions:
+After your request has been authenticated and authorized, AWS approves the actions or operations in your request\. Operations are defined by a service, and include things that you can do to a resource, such as viewing, creating, editing, and deleting that resource\. For example, IAM supports approximately 40 actions for a user resource, including the following actions:
 + `CreateUser`
 + `DeleteUser`
 + `GetUser`

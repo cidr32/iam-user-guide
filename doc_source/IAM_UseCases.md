@@ -23,24 +23,24 @@ John also creates a group called *AllUsers* so that he can easily apply any acco
 
 ## Use Case for IAM with Amazon EC2<a name="UseCase_EC2"></a>
 
-A company like Example Corp typically uses IAM to interact with services like Amazon EC2\. To understand this part of the use case, you need a basic understanding of Amazon EC2\. For more information about Amazon EC2, go to the [Amazon EC2 User Guide for Linux Instances](http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/)\.
+A company like Example Corp typically uses IAM to interact with services like Amazon EC2\. To understand this part of the use case, you need a basic understanding of Amazon EC2\. For more information about Amazon EC2, go to the [Amazon EC2 User Guide for Linux Instances](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/)\.
 
 ### Amazon EC2 Permissions for the Groups<a name="EC2_PermissionsGroups"></a>
 
 To provide "perimeter" control, John attaches a policy to the AllUsers group\. This policy denies any AWS request from a user if the originating IP address is outside Example Corp's corporate network\.
 
 At Example Corp, different groups require different permissions:
-+ **System Administrators** – Need permission to create and manage AMIs, instances, snapshots, volumes, security groups, and so on\. John attaches a policy to the SysAdmins group that gives members of the group permission to use all the Amazon EC2 actions\.
-+ **Developers** – Need the ability to work with instances only\. John therefore attaches a policy to the Developers group that allows developers to call `DescribeInstances`, `RunInstances`, `StopInstances`, `StartInstances`, and `TerminateInstances`\. 
++ **System administrators** – Need permission to create and manage AMIs, instances, snapshots, volumes, security groups, and so on\. John attaches the `AmazonEC2FullAccess` AWS managed policy to the SysAdmins group that gives members of the group permission to use all the Amazon EC2 actions\.
++ **Developers** – Need the ability to work with instances only\. John therefore creates and attaches a policy to the Developers group that allows developers to call `DescribeInstances`, `RunInstances`, `StopInstances`, `StartInstances`, and `TerminateInstances`\. 
 **Note**  
 Amazon EC2 uses SSH keys, Windows passwords, and security groups to control who has access to the operating system of specific Amazon EC2 instances\. There's no method in the IAM system to allow or deny access to the operating system of a specific instance\.
-+ **Managers** – Should not be able to perform any Amazon EC2 actions except listing the Amazon EC2 resources currently available\. Therefore, John attaches a policy to the Managers group that only lets them call Amazon EC2 "Describe" API operations\.
++ **Managers** – Should not be able to perform any Amazon EC2 actions except listing the Amazon EC2 resources currently available\. Therefore, John creates and attaches a policy to the Managers group that only lets them call Amazon EC2 "Describe" API operations\.
 
-For examples of what these policies might look like, see [Example Policies](access_policies_examples.md) and [Using AWS Identity and Access Management](http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/index.html?UsingIAM.html) in the *Amazon EC2 User Guide for Linux Instances*\.
+For examples of what these policies might look like, see [Example IAM Identity\-Based Policies](access_policies_examples.md) and [Using AWS Identity and Access Management](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/index.html?UsingIAM.html) in the *Amazon EC2 User Guide for Linux Instances*\.
 
-### User's Role Change<a name="EC2_UserRoleChange"></a>
+### User's Job Function Change<a name="EC2_UserRoleChange"></a>
 
-At some point, one of the developers, Paulo, changes roles and becomes a manager\. John moves Paulo from the Developers group to the Managers group\. Now that he's in the Managers group, Paulo's ability to interact with Amazon EC2 instances is limited\. He can't launch or start instances\. He also can't stop or terminate existing instances, even if he was the user who launched or started the instance\. He can list only the instances that Example Corp users have launched\.
+At some point, one of the developers, Paulo, changes job functions and becomes a manager\. John moves Paulo from the Developers group to the Managers group\. Now that he's in the Managers group, Paulo's ability to interact with Amazon EC2 instances is limited\. He can't launch or start instances\. He also can't stop or terminate existing instances, even if he was the user who launched or started the instance\. He can list only the instances that Example Corp users have launched\.
 
 ## Use Case for IAM with Amazon S3<a name="UseCase_S3"></a>
 
@@ -71,11 +71,11 @@ Now John creates a set of policies to assign permissions to the users and groups
 **Note**  
 Amazon S3 doesn't automatically give a user who creates a bucket or object permission to perform other actions on that bucket or object\. Therefore, in your IAM policies, you must explicitly give users permission to use the Amazon S3 resources they create\.
 
-For examples of what these policies might look like, see [Access Control](http://docs.aws.amazon.com/AmazonS3/latest/dev/UsingAuthAccess.html) in the *Amazon Simple Storage Service Developer Guide*\. For information on how policies are evaluated at run time, see [Policy Evaluation Logic](reference_policies_evaluation-logic.md)\. 
+For examples of what these policies might look like, see [Access Control](https://docs.aws.amazon.com/AmazonS3/latest/dev/UsingAuthAccess.html) in the *Amazon Simple Storage Service Developer Guide*\. For information on how policies are evaluated at runtime, see [Policy Evaluation Logic](reference_policies_evaluation-logic.md)\. 
 
-### User's Role Change<a name="S3_UserRoleChange"></a>
+### User's Job Function Change<a name="S3_UserRoleChange"></a>
 
-At some point, one of the developers, Zhang, changes roles and becomes a manager\. We assume that he no longer needs access to the documents in the `share/developers` directory\. John, as an admin, moves Zhang to the `Managers` group and out of the `Developers` group\. With just that simple reassignment, Zhang automatically gets all permissions granted to the `Managers` group, but can no longer access data in the `share/developers` directory\.
+At some point, one of the developers, Zhang, changes job functions and becomes a manager\. We assume that he no longer needs access to the documents in the `share/developers` directory\. John, as an admin, moves Zhang to the `Managers` group and out of the `Developers` group\. With just that simple reassignment, Zhang automatically gets all permissions granted to the `Managers` group, but can no longer access data in the `share/developers` directory\.
 
 ### Integration with a Third\-Party Business<a name="S3_3rdPartyBusiness"></a>
 

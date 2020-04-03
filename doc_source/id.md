@@ -4,9 +4,10 @@ This section describes *IAM identities*, which you create to provide authenticat
 
 ## [The AWS Account Root User](id_root-user.md)<a name="id_root"></a>
 
-When you first create an AWS account, you create an account \(or root user\) identity, which you use to sign in to AWS\. You can sign in to the AWS Management Console as the root user—that is, the email address and password that you provide when you create the account\. This combination of your email address and password is called your root user credentials\.
+When you first create an Amazon Web Services \(AWS\) account, you begin with a single sign\-in identity that has complete access to all AWS services and resources in the account\. This identity is called the AWS account *root user* and is accessed by signing in with the email address and password that you used to create the account\.
 
-When you sign in as the root user, you have complete, unrestricted access to all resources in your AWS account, including access to your billing information and the ability to change your password\. This level of access is necessary when you initially set up the account\. However, we recommend that you ***don't*** use root user credentials for everyday access\. We especially recommend that you do not share your root user credentials with anyone, because doing so gives them unrestricted access to your account\. It is not possible to restrict the permissions that are granted to the AWS account\. Instead, we strongly recommend that you adhere to the [best practice of using the root user only to create your first IAM user](best-practices.md#create-iam-users) and then securely locking away the root user credentials\. 
+**Important**  
+We strongly recommend that you do not use the root user for your everyday tasks, even the administrative ones\. Instead, adhere to the [best practice of using the root user only to create your first IAM user](https://docs.aws.amazon.com/IAM/latest/UserGuide/best-practices.html#create-iam-users)\. Then securely lock away the root user credentials and use them to perform only a few account and service management tasks\. To view the tasks that require you to sign in as the root user, see [AWS Tasks That Require Root User](https://docs.aws.amazon.com/general/latest/gr/aws_tasks-that-require-root.html)\.
 
 ## [IAM Users](id_users.md)<a name="id_iam-users"></a>
 
@@ -33,24 +34,21 @@ Because an IAM user is just an identity with specific permissions in your accoun
 + **Other people in your group need to work in your AWS account, and your group is using no other identity mechanism\.**
 
   Create IAM users for the individuals who need access to your AWS resources, assign appropriate permissions to each user, and give each user his or her own credentials\. We strongly recommend that you never share credentials among multiple users\. 
-+ **You want to use the [command\-line interface](http://docs.aws.amazon.com/cli/latest/userguide/cli-chap-welcome.html) \(CLI\) to work with AWS\.**
-
-  The CLI needs credentials that it can use to make calls to AWS\. Create an IAM user and give that user permissions to run the CLI commands you need\. Then configure the CLI on your computer to use the access key credentials associated with that IAM user\. 
 
 ## When to Create an IAM Role \(Instead of a User\)<a name="id_which-to-choose_role"></a>
 
 Create an IAM role in the following situations:
 
 **You're creating an application that runs on an Amazon Elastic Compute Cloud \(Amazon EC2\) instance and that application makes requests to AWS\.**  
-Don't create an IAM user and pass the user's credentials to the application or embed the credentials in the application\. Instead, create an IAM role that you attach to the EC2 instance to give applications running on the instance temporary security credentials\. The credentials have the permissions specified in the policies attached to the role\. For details, see [Using an IAM Role to Grant Permissions to Applications Running on Amazon EC2 Instances](id_roles_use_switch-role-ec2.md)\.
+Don't create an IAM user and pass the user's credentials to the application or embed the credentials in the application\. Instead, create an IAM role that you attach to the EC2 instance to give temporary security credentials to applications running on the instance\. When an application uses these credentials in AWS, it can perform all of the operations that are allowed by the policies attached to the role\. For details, see [Using an IAM Role to Grant Permissions to Applications Running on Amazon EC2 Instances](id_roles_use_switch-role-ec2.md)\.
 
 **You're creating an app that runs on a mobile phone and that makes requests to AWS\.**  
 Don't create an IAM user and distribute the user's access key with the app\. Instead, use an identity provider like Login with Amazon, Amazon Cognito, Facebook, or Google to authenticate users and map the users to an IAM role\. The app can use the role to get temporary security credentials that have the permissions specified by the policies attached to the role\. For more information, see the following:   
-+ [Amazon Cognito Overview](http://docs.aws.amazon.com/mobile/sdkforandroid/developerguide/cognito-auth.html#d0e840) in the *AWS Mobile SDK for Android Developer Guide*
-+ [Amazon Cognito Overview](http://docs.aws.amazon.com/mobile/sdkforios/developerguide/cognito-auth.html#d0e664) in the *AWS Mobile SDK for iOS Developer Guide*
++ [Amazon Cognito Overview](https://docs.aws.amazon.com/mobile/sdkforandroid/developerguide/cognito-auth.html#d0e840) in the *AWS Mobile SDK for Android Developer Guide*
++ [Amazon Cognito Overview](https://docs.aws.amazon.com/mobile/sdkforios/developerguide/cognito-auth.html#d0e664) in the *AWS Mobile SDK for iOS Developer Guide*
 + [About Web Identity Federation](id_roles_providers_oidc.md)
 
 **Users in your company are authenticated in your corporate network and want to be able to use AWS without having to sign in again—that is, you want to allow users to federate into AWS\.**  
 Don't create IAM users\. Configure a federation relationship between your enterprise identity system and AWS\. You can do this in two ways:   
 + If your company's identity system is compatible with SAML 2\.0, you can establish trust between your company's identity system and AWS\. For more information, see [About SAML 2\.0\-based Federation](id_roles_providers_saml.md)\.
-+ Create and use a custom proxy server that translates user identities from the enterprise into IAM roles that provide temporary AWS security credentials\. For more information, see [Creating a URL that Enables Federated Users to Access the AWS Management Console \(Custom Federation Broker\)](id_roles_providers_enable-console-custom-url.md)\.
++ Create and use a custom proxy server that translates user identities from the enterprise into IAM roles that provide temporary AWS security credentials\. For more information, see [Enabling Custom Identity Broker Access to the AWS Console](id_roles_providers_enable-console-custom-url.md)\.

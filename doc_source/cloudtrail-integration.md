@@ -1,76 +1,134 @@
-# Logging IAM Events with AWS CloudTrail<a name="cloudtrail-integration"></a>
+# Logging IAM and AWS STS API Calls with AWS CloudTrail<a name="cloudtrail-integration"></a>
 
-AWS Identity and Access Management \(IAM\) is integrated with AWS CloudTrail, a service that logs AWS events made by or on behalf of your AWS account\. CloudTrail logs authenticated AWS API calls and also AWS sign\-in events, and collects this event information in files that are delivered to Amazon S3 buckets\. Using information collected by CloudTrail, you can determine what requests were successfully made to AWS services, who made the request, when it was made, and so on\. 
+IAM and AWS STS are integrated with AWS CloudTrail, a service that provides a record of actions taken by an IAM user or role\. CloudTrail captures all API calls for IAM and AWS STS as events, including calls from the console and from API calls\. If you create a trail, you can enable continuous delivery of CloudTrail events to an Amazon S3 bucket\. If you don't configure a trail, you can still view the most recent events in the CloudTrail console in **Event history**\. You can use CloudTrail to get information about the request that was made to IAM or AWS STS\. For example, you can view the IP address from which the request was made, who made the request, when it was made, and additional details\. 
 
-To learn more about CloudTrail, including how to configure and enable it, see the [http://docs.aws.amazon.com/awscloudtrail/latest/userguide/](http://docs.aws.amazon.com/awscloudtrail/latest/userguide/)\. 
+To learn more about CloudTrail, see the [AWS CloudTrail User Guide](https://docs.aws.amazon.com/awscloudtrail/latest/userguide/)\.
 
 **Topics**
-+ [Types of IAM Information Logged in CloudTrail](#cloudtrail-integration-iam-information)
-+ [Examples of Logged Events in CloudTrail Files](#cloudtrail-integration-understanding-records)
-+ [Preventing Duplicate Log Entries in CloudTrail](#cloudtrail-integration-global-service)
++ [IAM and AWS STS Information in CloudTrail](#iam-info-in-cloudtrail)
++ [Logging IAM and AWS STS API Requests](#cloudtrail-integration_apis)
++ [Logging API Requests to Other AWS Services](#cloudtrail-integration_api-other-services)
++ [Logging Regional Sign\-in Events](#cloudtrail-integration_signin-regions)
++ [Logging User Sign\-in Events](#cloudtrail-integration_signin-users)
++ [Logging Sign\-in Events for Temporary Credentials](#cloudtrail-integration_signin-tempcreds)
++ [Example IAM API Events in CloudTrail Log](#cloudtrail-integration_examples-iam-api)
++ [Example AWS STS API Events in CloudTrail Log](#cloudtrail-integration_examples-sts-api)
++ [Example Sign\-In Events in CloudTrail Log](#cloudtrail-integration_examples-signin)
 
-## Types of IAM Information Logged in CloudTrail<a name="cloudtrail-integration-iam-information"></a>
+## IAM and AWS STS Information in CloudTrail<a name="iam-info-in-cloudtrail"></a>
 
- IAM information is available to CloudTrail in these ways: 
-+ **API requests to IAM and AWS Security Token Service \(AWS STS\)** – CloudTrail logs all authenticated API requests \(made with credentials\) to IAM and AWS STS APIs, with the exception of `DecodeAuthorizationMessage`\. CloudTrail also logs nonauthenticated requests to the AWS STS actions, `AssumeRoleWithSAML` and `AssumeRoleWithWebIdentity` and logs information provided by the identity provider\. You can use this information to map calls made by a federated user with an assumed role back to the originating external federated caller\. In the case of `AssumeRole`, you can map calls back to the originating AWS service or to the account of the originating user\. The `userIdentity` section of the JSON data in the CloudTrail log entry contains the information that you need to map the AssumeRole\* request with a specific federated user\. For more information, see [CloudTrail userIdentity Element](http://docs.aws.amazon.com/awscloudtrail/latest/userguide/cloudtrail-event-reference-user-identity.html) in the *AWS CloudTrail User Guide*\.
+CloudTrail is enabled on your AWS account when you create the account\. When activity occurs in IAM or AWS STS, that activity is recorded in a CloudTrail event along with other AWS service events in **Event history**\. You can view, search, and download recent events in your AWS account\. For more information, see [Viewing Events with CloudTrail Event History](https://docs.aws.amazon.com/awscloudtrail/latest/userguide/view-cloudtrail-events.html)\. 
 
-  For example, calls to the IAM `CreateUser`, `DeleteRole`, `ListGroups`, and other API operations are all logged by CloudTrail\. 
+For an ongoing record of events in your AWS account, including events for IAM and AWS STS, create a trail\. A trail enables CloudTrail to deliver log files to an Amazon S3 bucket\. By default, when you create a trail in the console, the trail applies to all Regions\. The trail logs events from all Regions in the AWS partition and delivers the log files to the Amazon S3 bucket that you specify\. Additionally, you can configure other AWS services to further analyze and act upon the event data collected in CloudTrail logs\. For more information, see: 
++ [Overview for Creating a Trail](https://docs.aws.amazon.com/awscloudtrail/latest/userguide/cloudtrail-create-and-update-a-trail.html)
++ [CloudTrail Supported Services and Integrations](https://docs.aws.amazon.com/awscloudtrail/latest/userguide/cloudtrail-aws-service-specific-topics.html#cloudtrail-aws-service-specific-topics-integrations)
++ [Configuring Amazon SNS Notifications for CloudTrail](https://docs.aws.amazon.com/awscloudtrail/latest/userguide/getting_notifications_top_level.html)
++ [Receiving CloudTrail Log Files from Multiple Regions](https://docs.aws.amazon.com/awscloudtrail/latest/userguide/receive-cloudtrail-log-files-from-multiple-regions.html) and [Receiving CloudTrail Log Files from Multiple Accounts](https://docs.aws.amazon.com/awscloudtrail/latest/userguide/cloudtrail-receive-logs-from-multiple-accounts.html)
 
-  Examples for this type of log entry are presented later in this topic\. 
+All IAM and AWS STS actions are logged by CloudTrail and are documented in the [IAM API Reference](https://docs.aws.amazon.com/IAM/latest/APIReference/API_Operations.html) and the [AWS Security Token Service API Reference](https://docs.aws.amazon.com/STS/latest/APIReference/API_Operations.html)\.
+
+## Logging IAM and AWS STS API Requests<a name="cloudtrail-integration_apis"></a>
+
+CloudTrail logs all authenticated API requests \(made with credentials\) to IAM and AWS STS API operations\. CloudTrail also logs nonauthenticated requests to the AWS STS actions, `AssumeRoleWithSAML` and `AssumeRoleWithWebIdentity`, and logs information provided by the identity provider\. You can use this information to map calls made by a federated user with an assumed role back to the originating external federated caller\. In the case of `AssumeRole`, you can map calls back to the originating AWS service or to the account of the originating user\. The `userIdentity` section of the JSON data in the CloudTrail log entry contains the information that you need to map the AssumeRole\* request with a specific federated user\. For more information, see [CloudTrail userIdentity Element](https://docs.aws.amazon.com/awscloudtrail/latest/userguide/cloudtrail-event-reference-user-identity.html) in the *AWS CloudTrail User Guide*\.
+
+For example, calls to the IAM `CreateUser`, `DeleteRole`, `ListGroups`, and other API operations are all logged by CloudTrail\. 
+
+Examples for this type of log entry are presented later in this topic\. 
+
 **Important**  
-If you activate AWS STS endpoints in regions other than the default global endpoint, then you must also turn on CloudTrail logging in those regions to record any AWS STS API calls made in those regions\. For more information, see [Turning On CloudTrail in Additional Regions](http://docs.aws.amazon.com/awscloudtrail/latest/userguide/aggregating_logs_regions_turn_on_ct.html) in the AWS CloudTrail User Guide\.
-+ **API requests to other AWS services** – Authenticated requests to other AWS service API operations are logged by CloudTrail, and these log entries contain information about who generated the request\. 
+If you activate AWS STS endpoints in Regions other than the default global endpoint, then you must also turn on CloudTrail logging in those Regions\. This is necessary to record any AWS STS API calls that are made in those Regions\. For more information, see [Turning On CloudTrail in Additional Regions](https://docs.aws.amazon.com/awscloudtrail/latest/userguide/aggregating_logs_regions_turn_on_ct.html) in the AWS CloudTrail User Guide\.
 
-  For example, if a request is made to list Amazon EC2 instances or create an AWS CodeDeploy deployment group, the user identity of the person or service that made the request is contained in the log entry for that request\. The user identity information helps you determine whether the request was made with AWS account root user credentials or IAM user credentials, with temporary security credentials for a role or federated user, or by another AWS service\. 
+## Logging API Requests to Other AWS Services<a name="cloudtrail-integration_api-other-services"></a>
 
-  For more details about the user identity information in CloudTrail log entries, see [userIdentity Element](http://docs.aws.amazon.com/awscloudtrail/latest/userguide/event_reference_user_identity.html) in the *AWS CloudTrail User Guide*\. 
-+ **AWS sign\-in events** – Sign\-in events to the AWS Management Console, the AWS Discussion Forums, and the AWS Marketplace are logged by CloudTrail\. 
+Authenticated requests to other AWS service API operations are logged by CloudTrail, and these log entries contain information about who generated the request\. 
 
-  For example, IAM and federated user sign\-in events—successful sign\-ins and failed sign\-in attempts—are logged by CloudTrail\. Additionally, successful sign\-in events by the root user are logged by CloudTrail\. Note that unsuccessful sign\-in events by the root user are *not *logged by CloudTrail\.
+For example, assume that you made a request to list Amazon EC2 instances or create an CodeDeploy deployment group\. Details about the person or service that made the request are contained in the log entry for that request\. This information helps you determine whether the request was made by the AWS account root user, an IAM user, a role, or another AWS service\. 
 
-  If you enable CloudTrail to log sign\-in events to your logs, you need to be aware of how CloudTrail chooses where to log the events\.
-  + If your users sign in directly to a console, they are redirected to either a global or a regional sign\-in endpoint, based on whether the selected service console supports regions\. For example, the main console home page supports regions, so if you sign in to the following URL:
+For more details about the user identity information in CloudTrail log entries, see [userIdentity Element](https://docs.aws.amazon.com/awscloudtrail/latest/userguide/event_reference_user_identity.html) in the *AWS CloudTrail User Guide*\. 
 
-    ```
-    https://alias.signin.aws.amazon.com/console
-    ```
+## Logging Regional Sign\-in Events<a name="cloudtrail-integration_signin-regions"></a>
 
-    you are redirected to a regional sign\-in endpoint such as `https://us-east-2.signin.aws.amazon.com`, resulting in a regional CloudTrail log entry in the user's region's log:
+If you enable CloudTrail to log sign\-in events to your logs, you need to be aware of how CloudTrail chooses where to log the events\.
++ If your users sign in directly to a console, they are redirected to either a global or a Regional sign\-in endpoint\. The endpoint depends on whether the selected service console supports Regions\. For example, the main console home page supports Regions\. If you sign in to https://alias\.signin\.aws\.amazon\.com/console, you are redirected to a Regional sign\-in endpoint such as https://us\-east\-2\.signin\.aws\.amazon\.com\. This redirection creates a Regional CloudTrail log entry in the user's Region's log\.
 
-    On the other hand, the Amazon S3 console does not support regions, so if you sign in to the following URL
+  On the other hand, the Amazon S3 console does not support Regions, so if you sign in to https://alias\.signin\.aws\.amazon\.com/console/s3, AWS redirects you to the global sign\-in endpoint at https://signin\.aws\.amazon\.com\. This redirection creates a global CloudTrail log entry\.
++ You can manually request a certain Regional sign\-in endpoint by signing in to the Region\-enabled main console home page using a URL like https://alias\.signin\.aws\.amazon\.com/console?region=ap\-southeast\-1\. In this case, AWS redirects you to the `ap-southeast-1` Regional sign\-in endpoint and results in a Regional CloudTrail log event\.
 
-    ```
-    https://alias.signin.aws.amazon.com/console/s3
-    ```
+Whether the sign\-in event is considered Regional or global depends on the console the user signs into and how the user constructs the sign\-in URL\.
++ Is the service console Regionalized? If so, then the sign\-in request is automatically redirected to a Regional sign\-in endpoint and the event is logged in that Region's CloudTrail log\. For example, if you sign in to https://*alias*\.signin\.aws\.amazon\.com/console, which is Regionalized, you are redirected to a sign\-in endpoint in your Region, such as https://us\-east\-2\.signin\.aws\.amazon\.com\. The event is logged in that Region's log\.
 
-    AWS redirects you to the global sign\-in endpoint at `https://signin.aws.amazon.com`, resulting in a global CloudTrail log entry\.
-  + You can manually request a certain regional sign\-in endpoint by signing in to the region\-enabled main console home page using a URL syntax like the following:
+  However, some services are not Regionalized yet\. For example, the Amazon S3 service is *not* currently Regionalized\. If you sign in to https://*alias*\.signin\.aws\.amazon\.com/console/s3, you are redirected to the global sign\-in endpoint at https://signin\.aws\.amazon\.com\. This redirection creates an event in your global log\.
++ You can also manually request a specific Regional sign\-in endpoint by using a URL such as https://*alias*\.signin\.aws\.amazon\.com/console?region=ap\-southeast\-1\. This URL redirects to the `ap-southeast-1` Regional sign\-in endpoint\. This redirection results in an event in the Regional log\.
 
-    ```
-    https://alias.signin.aws.amazon.com/console?region=ap-southeast-1
-    ```
+### Preventing Duplicate Regional Log Entries<a name="cloudtrail-integration-global-service"></a>
 
-    AWS redirects you to the `ap-southeast-1` regional sign\-in endpoint and results in a regional CloudTrail log event\.
-**Important**  
-As a security best practice, AWS does not log the entered user name text when the sign\-in failure is caused by *an incorrect user name*\. The user name text is masked by the value `HIDDEN_DUE_TO_SECURITY_REASONS`\. For an example of this, see [Sign\-in Failure Event Caused by Incorrect User Name](#hiddensecurity), later in this topic\. The reason the user name is obscured is because such failures might be caused by user errors like the following, which, if logged, could expose potentially sensitive information:  
-You accidentally type your password in the user name field\.
-You click the link for one AWS account's sign\-in page, but then type the account number for a different one\.
-You forget which account you are signing in to and accidentally type the account name of your personal email account, your bank sign\-in identifier, or some other private ID\. 
+CloudTrail creates separate trails in each Region\. These trails include information for events that occur in those Regions, plus global events and events that are not region\-specific\. Examples include IAM API calls, AWS STS calls to the global endpoint, and AWS sign\-in events\. For example, assume that you have two trails, each in a different Region\. If you then create a new IAM user, the `CreateUser` event is added to the log files in both Regions, creating a duplicate log entry\. 
 
-  Whether the sign\-in event is considered to a regional event or a global one depends on the console the user is signing into, and how the user constructs the sign\-in URL\.
-  + Is the service console regionalized? If so, then the sign\-in request is automatically redirected to a regional sign\-in endpoint and the event is logged in that region's CloudTrail log\. For example, if you sign in to `https://alias.signin.aws.amazon.com/console` the console home page which is regionalized, you are automatically redirected you to a sign\-in endpoint in your region \(for example, `https://us-east-2.signin.aws.amazon.com`\), and the event is logged in that region's log\.
+AWS Security Token Service \(STS\) is a global service with a single global endpoint at https://sts\.amazonaws\.com\. Calls to this endpoint are logged as calls to a global service\. However, because this endpoint is physically located in the US East \(N\. Virginia\) Region, your logs list us\-east\-1 as the event Region\. CloudTrail does not write these logs to the US East \(Ohio\) Region unless you choose to include global service logs in that Region\. AWS STS also allows calls to Regional endpoints, such as `sts.eu-central-1.amazonaws.com`\. CloudTrail writes calls to all Regional endpoints to their respective Regions\. For example, calls to `sts.us-east-2.amazonaws.com` are published to the US East \(Ohio\) Region\. Calls to `sts.eu-central-1.amazonaws.com` are published in the Europe \(Frankfurt\) Region logs\. 
 
-    However, some services are not regionalized yet\. For example, the Amazon S3 service is *not* currently regionalized, so if you sign in to `https://alias.signin.aws.amazon.com/console/s3`, you are redirected to the global sign\-in endpoint at `https://signin.aws.amazon.com`, resulting in an event in your global log\.
-  + You can also manually request a certain regional sign\-in endpoint by using a URL syntax like `https://alias.signin.aws.amazon.com/console?region=ap-southeast-1`, which redirects to the ap\-southeast\-1 regional sign\-in endpoint and results in an event in the regional log\.
-+ **How temporary credential requests are logged** – When a principal requests temporary credentials, the principal type determines how CloudTrail logs the event\. The following table shows how CloudTrail logs different information for each of the API calls that generate temporary credentials\.  
-****    
-[\[See the AWS documentation website for more details\]](http://docs.aws.amazon.com/IAM/latest/UserGuide/cloudtrail-integration.html)
+For more information about multiple Regions and AWS STS, see [Managing AWS STS in an AWS Region](id_credentials_temp_enable-regions.md)\. 
 
-## Examples of Logged Events in CloudTrail Files<a name="cloudtrail-integration-understanding-records"></a>
+The following table lists the Regions and how CloudTrail logs AWS STS requests in each Region\. The "Location" column indicates which logs CloudTrail writes to\. "Global" means that the event is logged in any Region for which you choose to include global service logs in that Region\. "Region" means that the event is logged only in the Region where the endpoint is located\. The last column indicates how the request's Region is identified in the log entry\.
 
-CloudTrail log files contain events that are formatted using JSON\. An event represents a single API request or sign\-in event and includes information about the requested action, any parameters, and the date and time of the action\. 
 
-### IAM API Event in CloudTrail Log File<a name="w3ab1c19c31c11b4"></a>
+****  
+
+| Region name | Region identity in CloudTrail log | Endpoint | Location of CloudTrail logs | 
+| --- | --- | --- | --- | 
+| n/a \- global | us\-east\-1 | sts\.amazonaws\.com | Global | 
+| US East \(Ohio\) | us\-east\-2 | sts\.us\-east\-2\.amazonaws\.com | Region | 
+| US East \(N\. Virginia\) | us\-east\-1 | sts\.us\-east\-1\.amazonaws\.com | Region | 
+| US West \(N\. California\) | us\-west\-1 | sts\.us\-west\-1\.amazonaws\.com | Region | 
+| US West \(Oregon\) | us\-west\-2 | sts\.us\-west\-2\.amazonaws\.com | Region | 
+| Canada \(Central\) | ca\-central\-1 | sts\.ca\-central\-1\.amazonaws\.com | Region | 
+| Europe \(Frankfurt\) | eu\-central\-1 | sts\.eu\-central\-1\.amazonaws\.com | Region | 
+| Europe \(Ireland\) | eu\-west\-1 | sts\.eu\-west\-1\.amazonaws\.com | Region | 
+| Europe \(London\) | eu\-west\-2 | sts\.eu\-west\-2\.amazonaws\.com | Region | 
+| Asia Pacific \(Tokyo\) | ap\-northeast\-1 | sts\.ap\-northeast\-1\.amazonaws\.com | Region | 
+| Asia Pacific \(Seoul\) | ap\-northeast\-2 | sts\.ap\-northeast\-2\.amazonaws\.com | Region | 
+| Asia Pacific \(Mumbai\) | ap\-south\-1 | sts\.ap\-south\-1\.amazonaws\.com | Region | 
+| Asia Pacific \(Singapore\) | ap\-southeast\-1 | sts\.ap\-southeast\-1\.amazonaws\.com | Region | 
+| Asia Pacific \(Sydney\) | ap\-southeast\-2 | sts\.ap\-southeast\-2\.amazonaws\.com | Region | 
+| South America \(São Paulo\) | sa\-east\-1 | sts\.sa\-east\-1\.amazonaws\.com | Region | 
+
+When you configure CloudTrail to aggregate trail information from multiple Regions in your account into a single Amazon S3 bucket, IAM events are duplicated in the logs\. In other words, the trail for each Region writes the same IAM event to the aggregated log\. To prevent this duplication, you can include global events selectively\. A typical approach is to enable global events in one trail\. Then disable global events in all other trails that write to the same Amazon S3 bucket\. That way only one set of global events is written\.
+
+For more information, see [Aggregating Logs](https://docs.aws.amazon.com/awscloudtrail/latest/userguide/aggregatinglogs.html) in the *AWS CloudTrail User Guide*\. 
+
+## Logging User Sign\-in Events<a name="cloudtrail-integration_signin-users"></a>
+
+CloudTrail logs sign\-in events to the AWS Management Console, the AWS discussion forums, and AWS Marketplace\. CloudTrail logs successful and failed sign\-in attempts for IAM users and federated users\. 
+
+For AWS account root users, only successful sign\-in events are logged\. Unsuccessful sign\-in events by the root user are *not *logged by CloudTrail\.
+
+As a security best practice, AWS does not log the entered IAM user name text when the sign\-in failure is caused by *an incorrect user name*\. The user name text is masked by the value `HIDDEN_DUE_TO_SECURITY_REASONS`\. For an example of this, see [Example Sign\-in Failure Event Caused by Incorrect User Name](#hiddensecurity), later in this topic\. The user name text is obscured because such failures might be caused by user errors\. Logging these errors could expose potentially sensitive information\. For example:
++ You accidentally type your password in the user name box\.
++ You choose the link for one AWS account's sign\-in page, but then type the account number for a different one\.
++ You forget which account you are signing in to and accidentally type the account name of your personal email account, your bank sign\-in identifier, or some other private ID\. 
+
+## Logging Sign\-in Events for Temporary Credentials<a name="cloudtrail-integration_signin-tempcreds"></a>
+
+When a principal requests temporary credentials, the principal type determines how CloudTrail logs the event\. This can be complicated when a principal assumes a role in another account\. There are multiple API calls to perform operations related to role cross\-account operations\. First, the principal calls an AWS STS API to retrieve the temporary credentials\. That operation is logged in the calling account and the account where the AWS STS operation is performed\. Then the principal then uses the role to perform other API calls in the assumed role's account,
+
+The following table shows how CloudTrail logs different information for each of the API calls that generate temporary credentials\.
+
+
+****  
+
+| Principal Type | STS API | User Identity in CloudTrail Log for Caller's Account | User Identity in CloudTrail Log for the Assumed Role's Account | User Identity in CloudTrail Log for the Role's Subsequent API Calls | 
+| --- | --- | --- | --- | --- | 
+| AWS account root user credentials | GetSessionToken | Root user identity | Role owner account is same as calling account | Root user identity | 
+| IAM user | GetSessionToken | IAM user identity | Role owner account is same as calling account | IAM user identity | 
+| IAM user | GetFederationToken | IAM user identity | Role owner account is same as calling account | IAM user identity | 
+| IAM user | AssumeRole | IAM user identity | Account number and principal ID \(if a user\), or AWS service principal | Role identity only \(no user\) | 
+| Externally authenticated user | AssumeRoleWithSAML | n/a | SAML user identity | Role identity only \(no user\) | 
+| Externally authenticated user | AssumeRoleWithWebIdentity | n/a | OIDC/Web user identity | Role identity only \(no user\) | 
+
+## Example IAM API Events in CloudTrail Log<a name="cloudtrail-integration_examples-iam-api"></a>
+
+CloudTrail log files contain events that are formatted using JSON\. An API event represents a single API request and includes information about the principal, the requested action, any parameters, and the date and time of the action\. 
+
+### Example IAM API Event in CloudTrail Log File<a name="cloudtrail-integration-iam-api-events"></a>
 
 The following example shows a CloudTrail log entry for a request made for the IAM `GetUserPolicy` action\. 
 
@@ -80,10 +138,10 @@ The following example shows a CloudTrail log entry for a request made for the IA
   "userIdentity": {
     "type": "IAMUser",
     "principalId": "AIDACKCEVSQ6C2EXAMPLE",
-    "arn": "arn:aws:iam::444455556666:user/Alice",
+    "arn": "arn:aws:iam::444455556666:user/JaneDoe",
     "accountId": "444455556666",
     "accessKeyId": "AKIAI44QH8DHBEXAMPLE",
-    "userName": "Alice",
+    "userName": "JameDoe",
     "sessionContext": {
       "attributes": {
         "mfaAuthenticated": "false",
@@ -99,8 +157,8 @@ The following example shows a CloudTrail log entry for a request made for the IA
   "sourceIPAddress": "signin.amazonaws.com",
   "userAgent": "signin.amazonaws.com",
   "requestParameters": {
-    "userName": "Alice",
-    "policyName": "ReadOnlyAccess-Alice-201407151307"
+    "userName": "JaneDoe",
+    "policyName": "ReadOnlyAccess-JaneDoe-201407151307"
   },
   "responseElements": null,
   "requestID": "9EXAMPLE-0c68-11e4-a24e-d5e16EXAMPLE",
@@ -108,11 +166,15 @@ The following example shows a CloudTrail log entry for a request made for the IA
 }
 ```
 
-From this event information, you can determine that the request was made to get a user policy named `ReadOnlyAccess-Alice-201407151307` for user `Alice`, as specified in the `requestParameters` element\. You can also see that the request was made by an IAM user named `Alice` on July 15, 2014 at 9:40 PM \(UTC\)\. In this case, the request originated in the AWS Management Console, as you can tell from the `userAgent` element\. 
+From this event information, you can determine that the request was made to get a user policy named `ReadOnlyAccess-JaneDoe-201407151307` for user `JaneDoe`, as specified in the `requestParameters` element\. You can also see that the request was made by an IAM user named `JaneDoe` on July 15, 2014 at 9:40 PM \(UTC\)\. In this case, the request originated in the AWS Management Console, as you can tell from the `userAgent` element\. 
 
-### AWS STS API Event in CloudTrail Log File<a name="stscloudtrailexample"></a>
+## Example AWS STS API Events in CloudTrail Log<a name="cloudtrail-integration_examples-sts-api"></a>
 
-The IAM user named "Bob" in account 777788889999 calls the AWS STS `AssumeRole` action to assume the role `EC2-dev` in account 111122223333\. The next two examples show the CloudTrail log entries for the two affected accounts\. The first example shows the CloudTrail log entry for the request made in account 777788889999, the account that owns the user who calls `AssumeRole`\.
+CloudTrail log files contain events that are formatted using JSON\. An API event represents a single API request and includes information about the principal, the requested action, any parameters, and the date and time of the action\. 
+
+### Example Cross\-Account AWS STS API Events in CloudTrail Log Files<a name="stscloudtrailexample"></a>
+
+The IAM user named `JohnDoe` in account 777788889999 calls the AWS STS `AssumeRole` action to assume the role `EC2-dev` in account 111122223333\.
 
 ```
 {
@@ -120,10 +182,10 @@ The IAM user named "Bob" in account 777788889999 calls the AWS STS `AssumeRole` 
   "userIdentity": {
     "type": "IAMUser",
     "principalId": "AIDAQRSTUVWXYZEXAMPLE",
-    "arn": "arn:aws:iam::777788889999:user/Bob",
+    "arn": "arn:aws:iam::777788889999:user/JohnDoe",
     "accountId": "777788889999",
     "accessKeyId": "AKIAQRSTUVWXYZEXAMPLE",
-    "userName": "Bob"
+    "userName": "JohnDoe"
   },
   "eventTime": "2014-07-18T15:07:39Z",
   "eventSource": "sts.amazonaws.com",
@@ -133,7 +195,7 @@ The IAM user named "Bob" in account 777788889999 calls the AWS STS `AssumeRole` 
   "userAgent": "aws-cli/1.11.10 Python/2.7.8 Linux/3.2.45-0.6.wd.865.49.315.metal1.x86_64 botocore/1.4.67",
   "requestParameters": {
     "roleArn": "arn:aws:iam::111122223333:role/EC2-dev",
-    "roleSessionName": "Bob-EC2-dev"
+    "roleSessionName": "JohnDoe-EC2-dev"
     "serialNumber": "arn:aws:iam::777788889999:mfa"
   },
   "responseElements": {
@@ -143,8 +205,8 @@ The IAM user named "Bob" in account 777788889999 calls the AWS STS `AssumeRole` 
       "expiration": "Jul 18, 2014 4:07:39 PM"
       },
     "assumedRoleUser": {
-      "assumedRoleId": "AIDAQRSTUVWXYZEXAMPLE:Bob-EC2-dev",
-      "arn": "arn:aws:sts::111122223333:assumed-role/EC2-dev/Bob-EC2-dev"
+      "assumedRoleId": "AIDAQRSTUVWXYZEXAMPLE:JohnDoe-EC2-dev",
+      "arn": "arn:aws:sts::111122223333:assumed-role/EC2-dev/JohnDoe-EC2-dev"
     }
   },
   "resources": [
@@ -162,7 +224,7 @@ The IAM user named "Bob" in account 777788889999 calls the AWS STS `AssumeRole` 
 }
 ```
 
-The second example shows the role owning account's \(111122223333\) CloudTrail log entry for the same request\.
+The second example shows the assumed role account's \(111122223333\) CloudTrail log entry for the same request\.
 
 ```
 { 
@@ -180,7 +242,7 @@ The second example shows the role owning account's \(111122223333\) CloudTrail l
   "userAgent": "aws-cli/1.11.10 Python/2.7.8 Linux/3.2.45-0.6.wd.865.49.315.metal1.x86_64 botocore/1.4.67",
   "requestParameters": {   
     "roleArn": "arn:aws:iam:: 111122223333:role/EC2-dev",
-    "roleSessionName": "Bob-EC2-dev",
+    "roleSessionName": "JohnDoe-EC2-dev",
     "serialNumber": "arn:aws:iam::777788889999:mfa"
   }, 
   "responseElements": {
@@ -190,8 +252,8 @@ The second example shows the role owning account's \(111122223333\) CloudTrail l
       "expiration": "Jul 18, 2014 4:07:39 PM"     
     },   
     "assumedRoleUser": {     
-      "assumedRoleId": "AIDAQRSTUVWXYZEXAMPLE:Bob-EC2-dev",     
-      "arn": "arn:aws:sts::111122223333:assumed-role/EC2-dev/Bob-EC2-dev"   
+      "assumedRoleId": "AIDAQRSTUVWXYZEXAMPLE:JohnDoe-EC2-dev",     
+      "arn": "arn:aws:sts::111122223333:assumed-role/EC2-dev/JohnDoe-EC2-dev"   
     } 
   }, 
   "requestID": "4EXAMPLE-0e8d-11e4-96e4-e55c0EXAMPLE",
@@ -200,7 +262,89 @@ The second example shows the role owning account's \(111122223333\) CloudTrail l
 }
 ```
 
-The following example shows a CloudTrail log entry for a request made by an AWS service calling an API using permissions from an IAM role\.
+### Example AWS STS Role Chaining API Event in CloudTrail Log File<a name="stscloudtrailexample-assumerole"></a>
+
+The following example shows a CloudTrail log entry for a request made by John Doe in account 111111111111\. John previously used his `JohnDoe` user to assume the `JohnRole1` role\. For this request, he uses the credentials from that role to assume the `JonRole2` role\. This is known as [role chaining](id_roles_terms-and-concepts.md#iam-term-role-chaining)\. John passes two [session tags](id_session-tags.md) into the request\. He sets those two tags as transitive\. The request inherits the `Department` tag as transitive because John set it as transitive when he assumed `JohnRole1`\. For more information about transitive keys in role chains, see [Chaining Roles with Session Tags](id_session-tags.md#id_session-tags_role-chaining)\.
+
+```
+{
+    "eventVersion": "1.05",
+    "userIdentity": {
+        "type": "AssumedRole",
+        "principalId": "AROAIN5ATK5U7KEXAMPLE:JohnRole1",
+        "arn": "arn:aws:sts::111111111111:assumed-role/JohnDoe/JohnRole1",
+        "accountId": "111111111111",
+        "accessKeyId": "AKIAI44QH8DHBEXAMPLE",
+        "sessionContext": {
+            "attributes": {
+                "mfaAuthenticated": "false",
+                "creationDate": "2019-10-02T21:50:54Z"
+            },
+            "sessionIssuer": {
+                "type": "Role",
+               "principalId": "AROAIN5ATK5U7KEXAMPLE",
+                "arn": "arn:aws:iam::111111111111:role/JohnRole1",
+                "accountId": "111111111111",
+                "userName": "JohnDoe"
+            }
+        }
+    },
+    "eventTime": "2019-10-02T22:12:29Z",
+    "eventSource": "sts.amazonaws.com",
+    "eventName": "AssumeRole",
+    "awsRegion": "us-east-2",
+    "sourceIPAddress": "123.145.67.89",
+    "userAgent": "aws-cli/1.16.248 Python/3.4.7 Linux/4.9.184-0.1.ac.235.83.329.metal1.x86_64 botocore/1.12.239",
+    "requestParameters": {
+        "incomingTransitiveTags": {
+            "Department": "Engineering"
+        },
+        "tags": [
+            {
+                "value": "johndoe@example.com",
+                "key": "Email"
+            },
+            {
+                "value": "12345",
+                "key": "CostCenter"
+            }
+        ],
+        "roleArn": "arn:aws:iam::111111111111:role/JohnRole2",
+        "roleSessionName": "Role2WithTags",
+        "transitiveTagKeys": [
+            "Email",
+            "CostCenter"
+        ],
+        "durationSeconds": 3600
+    },
+    "responseElements": {
+        "credentials": {
+            "accessKeyId": "ASIAWHOJDLGPOEXAMPLE",
+            "expiration": "Oct 2, 2019 11:12:29 PM",
+            "sessionToken": "AgoJb3JpZ2luX2VjEB4aCXVzLXdlc3QtMSJHMEXAMPLETOKEN+//rJb8Lo30mFc5MlhFCEbubZvEj0wHB/mDMwIgSEe9gk/Zjr09tZV7F1HDTMhmEXAMPLETOKEN/iEJ/rkqngII9///////////ARABGgw0MjgzMDc4NjM5NjYiDLZjZFKwP4qxQG5sFCryASO4UPz5qE97wPPH1eLMvs7CgSDBSWfonmRTCfokm2FN1+hWUdQQH6adjbbrVLFL8c3jSsBhQ383AvxpwK5YRuDE1AI/+C+WKFZb701eiv9J5La2EXAMPLETOKEN/c7S5Iro1WUJ0q3Cxuo/8HUoSxVhQHM7zF7mWWLhXLEQ52ivL+F6q5dpXu4aTFedpMfnJa8JtkWwG9x1Axj0Ypy2ok8v5unpQGWych1vwdvj6ez1Dm8Xg1+qIzXILiEXAMPLETOKEN/vQGqu8H+nxp3kabcrtOvTFTvxX6vsc8OGwUfHhzAfYGEXAMPLETOKEN/L6v1yMM3B1OwFOrQBno1HEjf1oNI8RnQiMNFdUOtwYj7HUZIOCZmjfN8PPHq77N7GJl9lzvIZKQA0Owcjg+mc78zHCj8y0siY8C96paEXAMPLETOKEN/E3cpksxWdgs91HRzJWScjN2+r2LTGjYhyPqcmFzzo2mCE7mBNEXAMPLETOKEN/oJy+2o83YNW5tOiDmczgDzJZ4UKR84yGYOMfSnF4XcEJrDgAJ3OJFwmTcTQICAlSwLEXAMPLETOKEN"
+        },
+        "assumedRoleUser": {
+            "assumedRoleId": "AROAIFR7WHDTSOYQYHFUE:Role2WithTags",
+            "arn": "arn:aws:sts::111111111111:assumed-role/test-role/Role2WithTags"
+        }
+    },
+    "requestID": "b96b0e4e-e561-11e9-8b3f-7b396EXAMPLE",
+    "eventID": "1917948f-3042-46ec-98e2-62865EXAMPLE",
+    "resources": [
+        {
+            "ARN": "arn:aws:iam::111122223333:role/JohnRole2",
+            "accountId": "111111111111",
+            "type": "AWS::IAM::Role"
+        }
+    ],
+    "eventType": "AwsApiCall",
+    "recipientAccountId": "111111111111"
+}
+```
+
+### Example AWS Service AWS STS API Event in CloudTrail Log File<a name="stscloudtrailexample_service"></a>
+
+The following example shows a CloudTrail log entry for a request made by an AWS service calling another service API using permissions from a service role\. It shows the CloudTrail log entry for the request made in account 777788889999\.
 
 ```
 {
@@ -242,66 +386,79 @@ The following example shows a CloudTrail log entry for a request made by an AWS 
 }
 ```
 
-The following example shows a CloudTrail log entry for a request made for the AWS STS `AssumeRoleWithSAML` action\.
+### Example SAML AWS STS API Event in CloudTrail Log File<a name="stscloudtrailexample_saml"></a>
+
+The following example shows a CloudTrail log entry for a request made for the AWS STS `AssumeRoleWithSAML` action\. The request includes the SAML attributes `CostCenter` and `Project` that are passed through the SAML assertion as [session tags](id_session-tags.md)\. Those tags are set as transitive so that they [persist in role chaining scenarios](id_session-tags.md#id_session-tags_role-chaining)\.
 
 ```
 {
-  "eventVersion": "1.05",
-  "userIdentity": {
-    "type": "SAMLUser",
-    "principalId": "<id of identity provider>:<canonical id of user>",
-    "userName": "<canonical id of user>",
-    "identityProvider": "<id of identity provider>"
-  },
-  "eventTime": "2016-03-23T01:39:57Z",
-  "eventSource": "sts.amazonaws.com",
-  "eventName": "AssumeRoleWithSAML",
-  "awsRegion": "us-east-2",
-  "sourceIPAddress": "192.0.2.101",
-  "userAgent": "aws-cli/1.3.23 Python/2.7.6 Linux/2.6.18-164.el5",
-  "requestParameters": {
-    "sAMLAssertionID": "_c0046cEXAMPLEb9d4b8eEXAMPLE2619aEXAMPLE",
-    "roleSessionName": "MyAssignedRoleSessionName",
-    "durationSeconds": 3600,
-    "roleArn": "arn:aws:iam::444455556666:role/SAMLTestRoleShibboleth",
-    "principalArn": "arn:aws:iam::444455556666:saml-provider/Shibboleth"
-  },
-  "responseElements": {
-    "subjectType": "transient",
-    "issuer": "https://server.example.com/idp/shibboleth",
-    "credentials": {
-      "accessKeyId": "AKIAIOSFODNN7EXAMPLE",
-      "expiration": "Mar 23, 2016 2:39:57 AM",
-      "sessionToken": "<encoded session token blob>"
+    "eventVersion": "1.05",
+    "userIdentity": {
+        "type": "SAMLUser",
+        "principalId": "SampleUkh1i4+ExamplexL/jEvs=:SamlExample",
+        "userName": "SamlExample",
+        "identityProvider": "bdGOnTesti4+ExamplexL/jEvs="
     },
-    "nameQualifier": "<id of identity provider>",
-    "assumedRoleUser": {
-      "assumedRoleId": "AROAD35QRSTUVWEXAMPLE:MyAssignedRoleSessionName",
-      "arn": "arn:aws:sts::444455556666:assumed-role/SAMLTestRoleShibboleth/MyAssignedRoleSessionName"
+    "eventTime": "2019-11-01T19:14:36Z",
+    "eventSource": "sts.amazonaws.com",
+    "eventName": "AssumeRoleWithSAML",
+    "awsRegion": "us-east-2",
+    "sourceIPAddress": "192.0.2.101",
+    "userAgent": "aws-cli/1.16.263 Python/3.4.7 Linux/4.9.184-0.1.ac.235.83.329.metal1.x86_64 botocore/1.12.253",
+    "requestParameters": {
+        "sAMLAssertionID": "_c0046cEXAMPLEb9d4b8eEXAMPLE2619aEXAMPLE",
+        "roleSessionName": "MyAssignedRoleSessionName",
+        "principalTags": {
+            "CostCenter": "987654",
+            "Project": "Unicorn",
+            "Department": "Engineering"
+        },
+        "transitiveTagKeys": [
+            "CostCenter",
+            "Project"
+        ],
+        "durationSeconds": 3600,
+        "roleArn": "arn:aws:iam::444455556666:role/SAMLTestRoleShibboleth",
+        "principalArn": "arn:aws:iam::444455556666:saml-provider/Shibboleth"
     },
-    "subject": "<canonical id of user>",
-    "audience": "https://signin.aws.amazon.com/saml"
-  },
-  "resources": [  
-    { 
-      "ARN": "arn:aws:iam::444455556666:role/SAMLTestRoleShibboleth",   
-      "accountId": "444455556666",
-      "type": "AWS::IAM::Role" 
+    "responseElements": {
+        "subjectType": "transient",
+        "issuer": "https://server.example.com/idp/shibboleth",
+        "credentials": {
+            "accessKeyId": "AKIAIOSFODNN7EXAMPLE",
+            "expiration": "Mar 23, 2016 2:39:57 AM",
+            "sessionToken": "<encoded session token blob>"
+        },
+        "nameQualifier": "bdGOnTesti4+ExamplexL/jEvs=",
+        "assumedRoleUser": {
+            "assumedRoleId": "AROAD35QRSTUVWEXAMPLE:MyAssignedRoleSessionName",
+            "arn": "arn:aws:sts::444455556666:assumed-role/SAMLTestRoleShibboleth/MyAssignedRoleSessionName"
+        },
+        "subject": "SamlExample",
+        "audience": "https://signin.aws.amazon.com/saml"
     },
-    {
-      "ARN": "arn:aws:iam::444455556666:saml-provider/test-saml-provider",   
-      "accountId": "444455556666",
-      "type": "AWS::IAM::SAMLProvider" 
-    }
-  ],
-  "requestID": "6EXAMPLE-e595-11e5-b2c7-c974fEXAMPLE",
-  "eventID": "dEXAMPLE-265a-41e0-9352-4401bEXAMPLE",
-  "eventType": "AwsApiCall",
-  "recipientAccountId": "444455556666"
+    "resources": [
+        {
+            "ARN": "arn:aws:iam::444455556666:role/SAMLTestRoleShibboleth",
+            "accountId": "444455556666",
+            "type": "AWS::IAM::Role"
+        },
+        {
+            "ARN": "arn:aws:iam::444455556666:saml-provider/test-saml-provider",
+            "accountId": "444455556666",
+            "type": "AWS::IAM::SAMLProvider"
+        }
+    ],
+    "requestID": "6EXAMPLE-e595-11e5-b2c7-c974fEXAMPLE",
+    "eventID": "dEXAMPLE-265a-41e0-9352-4401bEXAMPLE",
+    "eventType": "AwsApiCall",
+    "recipientAccountId": "444455556666"
 }
 ```
 
-The following example shows a CloudTrail log entry for a request made for the AWS STS `AssumeRoleWithWebIdentity` action\.
+### Example Web Identity AWS STS API Event in CloudTrail Log File<a name="stscloudtrailexample_web-identity"></a>
+
+The following example shows a CloudTrail log entry for a request made for the AWS STS `AssumeRoleWithWebIdentity` action\. The request includes the attributes `CostCenter` and `Project` that are passed through the identity provider token as [session tags](id_session-tags.md)\. Those tags are set as transitive so that they [persist in role chaining scenarios](id_session-tags.md#id_session-tags_role-chaining)\.
 
 ```
 {
@@ -322,6 +479,14 @@ The following example shows a CloudTrail log entry for a request made for the AW
     "durationSeconds": 3600,
     "roleArn": "arn:aws:iam::444455556666:role/FederatedWebIdentityRole",
     "roleSessionName": "MyAssignedRoleSessionName"
+        "principalTags": {
+            "CostCenter": "24680",
+            "Project": "Pegasus"
+        },
+        "transitiveTagKeys": [
+            "CostCenter",
+            "Project"
+        ],
   },
   "responseElements": {
     "provider": "accounts.google.com",
@@ -351,7 +516,46 @@ The following example shows a CloudTrail log entry for a request made for the AW
 }
 ```
 
-### Sign\-in Failure Event in CloudTrail Log File<a name="w3ab1c19c31c11b8"></a>
+## Example Sign\-In Events in CloudTrail Log<a name="cloudtrail-integration_examples-signin"></a>
+
+CloudTrail log files contain events that are formatted using JSON\. A sign\-in event represents a single sign\-in request and includes information about the sign\-in principal, the Region, and the date and time of the action\. 
+
+### Example Sign\-in Success Event in CloudTrail Log File<a name="cloudtrail-integration-signin-success"></a>
+
+The following example shows a CloudTrail log entry for a successful sign\-in event\.
+
+```
+{
+  "eventVersion": "1.05",
+  "userIdentity": {
+    "type": "IAMUser",
+    "principalId": "AIDACKCEVSQ6C2EXAMPLE",
+    "arn":"arn:aws:iam::111122223333:user/JohnDoe",
+    "accountId": "111122223333",
+    "userName": "JohnDoe"
+  },
+  "eventTime": "2014-07-16T15:49:27Z",
+  "eventSource": "signin.amazonaws.com",
+  "eventName": "ConsoleLogin",
+  "awsRegion": "us-east-2",
+  "sourceIPAddress": "192.0.2.110",
+  "userAgent": "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:24.0) Gecko/20100101 Firefox/24.0",
+  "requestParameters": null,
+  "responseElements": {
+    "ConsoleLogin": "Success"
+  },
+  "additionalEventData": {
+    "MobileVersion": "No",
+    "LoginTo": "[https://console\.aws\.amazon\.com/s3/](https://console.aws.amazon.com/s3/)",
+    "MFAUsed": "No"
+  },
+  "eventID": "3fcfb182-98f8-4744-bd45-10a395ab61cb"
+}
+```
+
+For more details about the information contained in CloudTrail log files, see [CloudTrail Event Reference](https://docs.aws.amazon.com/awscloudtrail/latest/userguide/eventreference.html) in the *AWS CloudTrail User Guide*\.
+
+### Example Sign\-in Failure Event in CloudTrail Log File<a name="cloudtrail-integration-signin-failure"></a>
 
 The following example shows a CloudTrail log entry for a failed sign\-in event\.
 
@@ -361,9 +565,9 @@ The following example shows a CloudTrail log entry for a failed sign\-in event\.
   "userIdentity": {
     "type": "IAMUser",
     "principalId": "AIDACKCEVSQ6C2EXAMPLE",
-    "arn":"arn:aws:iam::111122223333:user/Alice",
+    "arn":"arn:aws:iam::111122223333:user/JaneDoe",
     "accountId": "111122223333",
-    "userName": "Alice"
+    "userName": "JaneDoe"
   },
   "eventTime": "2014-07-08T17:35:27Z",
   "eventSource": "signin.amazonaws.com",
@@ -385,9 +589,9 @@ The following example shows a CloudTrail log entry for a failed sign\-in event\.
 }
 ```
 
-From this information, you can determine that the sign\-in attempt was made by an IAM user named Alice, as shown in the `userIdentity` element\. You can also see that the sign\-in attempt failed, as shown in the `responseElements` element\. You can see that Alice tried to sign in to the Amazon SNS console at 5:35 PM \(UTC\) on July 8th, 2014\.
+From this information, you can determine that the sign\-in attempt was made by an IAM user named `JaneDoe`, as shown in the `userIdentity` element\. You can also see that the sign\-in attempt failed, as shown in the `responseElements` element\. You can see that `JaneDoe` tried to sign in to the Amazon SNS console at 5:35 PM \(UTC\) on July 8, 2014\.
 
-### Sign\-in Failure Event Caused by Incorrect User Name<a name="hiddensecurity"></a>
+### Example Sign\-in Failure Event Caused by Incorrect User Name<a name="hiddensecurity"></a>
 
 The following example shows a CloudTrail log entry for an unsuccessful sign\-in event caused by the user entering an incorrect user name\. AWS masks the `userName` text with `HIDDEN_DUE_TO_SECURITY_REASONS` to help prevent exposing potentially sensitive information\.
 
@@ -421,73 +625,3 @@ The following example shows a CloudTrail log entry for an unsuccessful sign\-in 
   "recipientAccountId": "123456789012"
 }
 ```
-
-### Sign\-in Success Event in CloudTrail Log File<a name="w3ab1c19c31c11c12"></a>
-
-The following example shows a CloudTrail log entry for a successful sign\-in event\.
-
-```
-{
-  "eventVersion": "1.05",
-  "userIdentity": {
-    "type": "IAMUser",
-    "principalId": "AIDACKCEVSQ6C2EXAMPLE",
-    "arn":"arn:aws:iam::111122223333:user/Bob",
-    "accountId": "111122223333",
-    "userName": "Bob"
-  },
-  "eventTime": "2014-07-16T15:49:27Z",
-  "eventSource": "signin.amazonaws.com",
-  "eventName": "ConsoleLogin",
-  "awsRegion": "us-east-2",
-  "sourceIPAddress": "192.0.2.110",
-  "userAgent": "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:24.0) Gecko/20100101 Firefox/24.0",
-  "requestParameters": null,
-  "responseElements": {
-    "ConsoleLogin": "Success"
-  },
-  "additionalEventData": {
-    "MobileVersion": "No",
-    "LoginTo": "https://console.aws.amazon.com/s3",
-    "MFAUsed": "No"
-  },
-  "eventID": "3fcfb182-98f8-4744-bd45-10a395ab61cb"
-}
-```
-
-For more details about the information contained in CloudTrail log files, see [CloudTrail Event Reference](http://docs.aws.amazon.com/awscloudtrail/latest/userguide/eventreference.html) in the *AWS CloudTrail User Guide*\.
-
-## Preventing Duplicate Log Entries in CloudTrail<a name="cloudtrail-integration-global-service"></a>
-
-CloudTrail creates trails in each region separately\. These trails include information for events that occur in those regions, plus global \(that is, non\-region\-specific\) events such as IAM API calls, non\-region specific AWS STS calls \(calls to `sts.amazonaws.com`\), and AWS sign\-in events\. For example, by default, if you have two trails, each in a different region, and you then create a new IAM user, the `CreateUser` event is added to the log files in both regions, creating a duplicate log entry\. 
-
-**Note**  
-By default, AWS Security Token Service \(STS\) is a global service with a single endpoint at https://sts\.amazonaws\.com\. Calls to this endpoint are logged as calls to a global service\. However, because this endpoint is physically located in the US East \(N\. Virginia\) region, your logs list "us\-east\-1" as the event region\. CloudTrail does not write these logs to the US East \(Ohio\) region unless you choose to include global service logs in that region\. CloudTrail writes calls to all regional endpoints to their respective regions\. For example, calls to `sts.us-east-2.amazonaws.com` are published to the US East \(Ohio\) region, calls to `sts.eu-central-1.amazonaws.com` are published to the EU \(Frankfurt\) region, etc\.   
-For more information about multiple regions and AWS STS see [Activating and Deactivating AWS STS in an AWS Region](id_credentials_temp_enable-regions.md)\. 
-
-The following table lists the regions and how CloudTrail logs AWS STS requests in each region\. The "Location" column indicates which logs CloudTrail writes to\. "Global" means the event is logged in any region for which you choose to include global service logs in that region\. "Region" means that the event is logged only in the region where the endpoint is located\. The last column indicates how the request's region is identified in the log entry\.
-
-
-****  
-
-| Region name | Region identity in CloudTrail log | Endpoint | Location of CloudTrail logs | 
-| --- | --- | --- | --- | 
-| n/a \- global | us\-east\-1 | sts\.amazonaws\.com | global | 
-| US East \(Ohio\) | us\-east\-2 | sts\.us\-east\-2\.amazonaws\.com | region | 
-| US East \(N\. Virginia\) | us\-east\-1 | sts\.us\-east\-1\.amazonaws\.com | region | 
-| US West \(N\. California\) | us\-west\-1 | sts\.us\-west\-1\.amazonaws\.com | region | 
-| US West \(Oregon\) | us\-west\-2 | sts\.us\-west\-2\.amazonaws\.com | region | 
-| Canada \(Central\) | ca\-central\-1 | sts\.ca\-central\-1\.amazonaws\.com | region | 
-| EU \(Frankfurt\) | eu\-central\-1 | sts\.eu\-central\-1\.amazonaws\.com | region | 
-| EU \(Ireland\) | eu\-west\-1 | sts\.eu\-west\-1\.amazonaws\.com | region | 
-| EU \(London\) | eu\-west\-2 | sts\.eu\-west\-2\.amazonaws\.com | region | 
-| Asia Pacific \(Tokyo\) | ap\-northeast\-1 | sts\.ap\-northeast\-1\.amazonaws\.com | region | 
-| Asia Pacific \(Seoul\) | ap\-northeast\-2 | sts\.ap\-northeast\-2\.amazonaws\.com | region | 
-| Asia Pacific \(Mumbai\) | ap\-south\-1 | sts\.ap\-south\-1\.amazonaws\.com | region | 
-| Asia Pacific \(Singapore\) | ap\-southeast\-1 | sts\.ap\-southeast\-1\.amazonaws\.com | region | 
-| Asia Pacific \(Sydney\) | ap\-southeast\-2 | sts\.ap\-southeast\-2\.amazonaws\.com | region | 
-| South America \(São Paulo\) | sa\-east\-1 | sts\.sa\-east\-1\.amazonaws\.com | region | 
-
-When you configure CloudTrail to aggregate trail information from multiple regions in your account into a single Amazon S3 bucket, IAM events are duplicated in the logs—the trail for each region writes the same IAM event to the aggregated log\. To prevent this duplication, you can include global events selectively\. A typical approach is to enable global events in one trail and to disable global events in all other trails that write to the same Amazon S3 bucket\. That way only one set of global events is written\.
-
-For more information, see [Aggregating Logs](http://docs.aws.amazon.com/awscloudtrail/latest/userguide/aggregatinglogs.html) in the *AWS CloudTrail User Guide*\. 

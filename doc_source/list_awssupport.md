@@ -3,44 +3,57 @@
 AWS Support \(service prefix: `support`\) provides the following service\-specific resources, actions, and condition context keys for use in IAM permission policies\.
 
 References:
-+ Learn how to [configure this service](http://docs.aws.amazon.com/awssupport/latest/user/)\.
-+ View a [list of the API operations available for this service](http://docs.aws.amazon.com/awssupport/latest/APIReference/)\.
-+ Learn how to protect this service and its resources by [using IAM](http://docs.aws.amazon.com/awssupport/latest/user/access_permissions.html) permission policies\.
++ Learn how to [configure this service](https://docs.aws.amazon.com/awssupport/latest/user/getting-started.html)\.
++ View a list of the [API operations available for this service](https://docs.aws.amazon.com/awssupport/latest/APIReference/Welcome.html)\.
++ Learn how to secure this service and its resources by [using IAM](https://docs.aws.amazon.com/awssupport/latest/user/access_permissions.html) permission policies\.
 
 **Topics**
 + [Actions Defined by AWS Support](#awssupport-actions-as-permissions)
-+ [Resources Defined by Support](#awssupport-resources-for-iam-policies)
++ [Resource Types Defined by AWS Support](#awssupport-resources-for-iam-policies)
 + [Condition Keys for AWS Support](#awssupport-policy-keys)
 
 ## Actions Defined by AWS Support<a name="awssupport-actions-as-permissions"></a>
 
-You can specify the following actions in the `Action` element of an IAM policy statement\. By using policies, you define the permissions for anyone performing an operation in AWS\. When you use an action in a policy, you usually allow or deny access to the API operation or CLI command with the same name\. However, in some cases, a single action controls access to more than one operation\. Alternatively, some operations require several different actions\. For details about the columns in the following table, see [The Actions Table](reference_policies_actions-resources-contextkeys.md#actions_table)\.
+You can specify the following actions in the `Action` element of an IAM policy statement\. Use policies to grant permissions to perform an operation in AWS\. When you use an action in a policy, you usually allow or deny access to the API operation or CLI command with the same name\. However, in some cases, a single action controls access to more than one operation\. Alternatively, some operations require several different actions\.
 
-AWS Support does not let you allow or deny access to individual actions; therefore your policy must use the `"Action": "support:*"` to use the AWS Support Center or to use the AWS Support API\. In addition, when you use the AWS Support API to call Trusted Advisor\-related actions \(such as `DescribeTrustedAdvisorChecks`\), none of the `trustedadvisor` actions restrict your access\. The `trustedadvisor` actions apply only to Trusted Advisor in the AWS Management Console\.
+The **Resource Types** column indicates whether each action supports resource\-level permissions\. If there is no value for this column, you must specify all resources \("\*"\) in the `Resource` element of your policy statement\. If the column includes a resource type, then you can specify an ARN of that type in a statement with that action\. Required resources are indicated in the table with an asterisk \(\*\)\. If you specify a resource\-level permission ARN in a statement using this action, then it must be of this type\. Some actions support multiple resource types\. If the resource type is optional \(not indicated as required\), then you can choose to use one but not the other\.
+
+For details about the columns in the following table, see [The Actions Table](reference_policies_actions-resources-contextkeys.md#actions_table)\.
+
+**Note**  
+AWS Support provides the ability to access, modify and resolve cases, as well as use Trusted Advisor actions\. When you use Support API to call Trusted Advisor\-related actions, none of the "trustedadvisor:\*" actions restrict your access\. The "trustedadvisor:\*" actions apply only to Trusted Advisor in the AWS Console\.
 
 
 ****  
 
 | Actions | Description | Access Level | Resource Types \(\*required\) | Condition Keys | Dependent Actions | 
 | --- | --- | --- | --- | --- | --- | 
-|   [ AddAttachmentsToSet ](http://docs.aws.amazon.com/awssupport/latest/APIReference/API_AddAttachmentsToSet.html)  | Adds one or more attachments to an attachment set\. If an attachmentSetId is not specified, a new attachment set is created\. | Write |  |  |  | 
-|   [ AddCommunicationToCase ](http://docs.aws.amazon.com/awssupport/latest/APIReference/API_AddCommunicationToCase.html)  | Adds additional customer communication to an AWS Support case\. | Write |  |  |  | 
-|   [ CreateCase ](http://docs.aws.amazon.com/awssupport/latest/APIReference/API_CreateCase.html)  | Creates a new case in the AWS Support Center\. | Write |  |  |  | 
-|   [ DescribeAttachment ](http://docs.aws.amazon.com/awssupport/latest/APIReference/API_DescribeAttachment.html)  | Returns a description of an attachment\. | Read |  |  |  | 
-|   [ DescribeCases ](http://docs.aws.amazon.com/awssupport/latest/APIReference/API_DescribeCases.html)  | Returns a list of cases that matches the given inputs | List |  |  |  | 
-|   [ DescribeCommunications ](http://docs.aws.amazon.com/awssupport/latest/APIReference/API_DescribeCommunications.html)  | Returns the communications \(and attachments\) for one or more support cases | Read |  |  |  | 
-|   [ DescribeServices ](http://docs.aws.amazon.com/awssupport/latest/APIReference/API_DescribeServices.html)  | Returns the current list of AWS services and a list of service categories that applies to each one\. | Read |  |  |  | 
-|   [ DescribeSeverityLevels ](http://docs.aws.amazon.com/awssupport/latest/APIReference/API_DescribeSeverityLevels.html)  | Returns the list of severity levels that can be assigned to an AWS Support case\. | List |  |  |  | 
-|   [ DescribeTrustedAdvisorCheckRefreshStatuses ](http://docs.aws.amazon.com/awssupport/latest/APIReference/API_DescribeTrustedAdvisorCheckRefreshStatuses.html)  | Returns the refresh status of the Trusted Advisor checks that have the specified check identifiers\. | Read |  |  |  | 
-|   [ DescribeTrustedAdvisorCheckResult ](http://docs.aws.amazon.com/awssupport/latest/APIReference/API_DescribeTrustedAdvisorCheckResult.html)  | Returns the results of the Trusted Advisor check that has the specified check identifier\. | Read |  |  |  | 
-|   [ DescribeTrustedAdvisorCheckSummaries ](http://docs.aws.amazon.com/awssupport/latest/APIReference/API_DescribeTrustedAdvisorCheckSummaries.html)  | Returns the summaries of the results of the Trusted Advisor checks that have the specified check identifiers\. | Read |  |  |  | 
-|   [ DescribeTrustedAdvisorChecks ](http://docs.aws.amazon.com/awssupport/latest/APIReference/API_DescribeTrustedAdvisorChecks.html)  | Returns information about all available Trusted Advisor checks, including name, ID, category, description, and metadata\. | Read |  |  |  | 
-|   [ RefreshTrustedAdvisorCheck ](http://docs.aws.amazon.com/awssupport/latest/APIReference/API_RefreshTrustedAdvisorCheck.html)  | Requests a refresh of the Trusted Advisor check that has the specified check ID\. | Write |  |  |  | 
-|   [ ResolveCase ](http://docs.aws.amazon.com/awssupport/latest/APIReference/API_ResolveCase.html)  | Resolves a case\. | Write |  |  |  | 
+|   [ AddAttachmentsToSet ](https://docs.aws.amazon.com/awssupport/latest/APIReference/API_AddAttachmentsToSet.html)  | Adds one or more attachments to an AWS Support case\. | Write |  |  |  | 
+|   [ AddCommunicationToCase ](https://docs.aws.amazon.com/awssupport/latest/APIReference/API_AddCommunicationToCase.html)  | Adds a customer communication to an AWS Support case\. | Write |  |  |  | 
+|   [ CreateCase ](https://docs.aws.amazon.com/awssupport/latest/APIReference/API_CreateCase.html)  | Creates a new AWS Support case\. | Write |  |  |  | 
+|   [ DescribeAttachment ](https://docs.aws.amazon.com/awssupport/latest/APIReference/API_DescribeAttachment.html)  | Returns the description for an attachment\. | Read |  |  |  | 
+|   DescribeCaseAttributes  | This is an internally managed function which allows secondary services to read AWS Support case attributes\. | Read |  |  |  | 
+|   [ DescribeCases ](https://docs.aws.amazon.com/awssupport/latest/APIReference/API_DescribeCases.html)  | Returns a list of AWS Support cases that matches the given inputs\. | Read |  |  |  | 
+|   [ DescribeCommunications ](https://docs.aws.amazon.com/awssupport/latest/APIReference/API_DescribeCommunications.html)  | Returns the communications and attachments for one or more AWS Support cases\. | Read |  |  |  | 
+|   DescribeIssueTypes  | Returns issue types for AWS Support cases\. | Read |  |  |  | 
+|   [ DescribeServices ](https://docs.aws.amazon.com/awssupport/latest/APIReference/API_DescribeServices.html)  | Returns the current list of AWS services and categories that applies to each service\. | Read |  |  |  | 
+|   [ DescribeSeverityLevels ](https://docs.aws.amazon.com/awssupport/latest/APIReference/API_DescribeSeverityLevels.html)  | Returns the list of severity levels that can be assigned to an AWS Support case\. | Read |  |  |  | 
+|   DescribeSupportLevel  | Returns the support level for an AWS Account identifier\. | Read |  |  |  | 
+|   [ DescribeTrustedAdvisorCheckRefreshStatuses ](https://docs.aws.amazon.com/awssupport/latest/APIReference/API_DescribeTrustedAdvisorCheckRefreshStatuses.html)  | Returns the status of a Trusted Advisor refresh check based on a list of check identifiers\. | Read |  |  |  | 
+|   [ DescribeTrustedAdvisorCheckResult ](https://docs.aws.amazon.com/awssupport/latest/APIReference/API_DescribeTrustedAdvisorCheckResult.html)  | Returns the results of the Trusted Advisor check that has the specified check identifier\. | Read |  |  |  | 
+|   [ DescribeTrustedAdvisorCheckSummaries ](https://docs.aws.amazon.com/awssupport/latest/APIReference/API_DescribeTrustedAdvisorCheckSummaries.html)  | Returns the summaries of the results of the Trusted Advisor checks that have the specified check identifiers\. | Read |  |  |  | 
+|   [ DescribeTrustedAdvisorChecks ](https://docs.aws.amazon.com/awssupport/latest/APIReference/API_DescribeTrustedAdvisorChecks.html)  | Returns a list of all available Trusted Advisor checks, including name, identifier, category and description\. | Read |  |  |  | 
+|   InitiateCallForCase  | This is an internally managed function to initiate a call on AWS Support Center\. | Write |  |  |  | 
+|   InitiateChatForCase  | This is an internally managed function to initiate a chat on AWS Support Center\. | Write |  |  |  | 
+|   PutCaseAttributes  | This is an internally managed function which allows secondary services to attach attributes to AWS Support cases\. | Write |  |  |  | 
+|   RateCaseCommunication  | Rate an AWS Support case communication\. | Write |  |  |  | 
+|   [ RefreshTrustedAdvisorCheck ](https://docs.aws.amazon.com/awssupport/latest/APIReference/API_RefreshTrustedAdvisorCheck.html)  | Requests a refresh of the Trusted Advisor check that has the specified check identifier\. | Write |  |  |  | 
+|   [ ResolveCase ](https://docs.aws.amazon.com/awssupport/latest/APIReference/API_ResolveCase.html)  | Resolves an AWS Support case\. | Write |  |  |  | 
+|   SearchForCases  | Returns a list of AWS Support cases that matches the given inputs\. | Read |  |  |  | 
 
-## Resources Defined by Support<a name="awssupport-resources-for-iam-policies"></a>
+## Resource Types Defined by AWS Support<a name="awssupport-resources-for-iam-policies"></a>
 
-AWS Support has no service\-defined resources that can be used as the `Resource` element of an IAM policy statement\.
+AWS Support does not support specifying a resource ARN in the `Resource` element of an IAM policy statement\. To allow access to AWS Support, specify `“Resource”: “*”` in your policy\.
 
 ## Condition Keys for AWS Support<a name="awssupport-policy-keys"></a>
 

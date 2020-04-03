@@ -1,17 +1,19 @@
-# IAM JSON Policy Elements: NotPrincipal<a name="reference_policies_elements_notprincipal"></a>
+# AWS JSON Policy Elements: NotPrincipal<a name="reference_policies_elements_notprincipal"></a>
 
-Use the `NotPrincipal` element to specify an exception to a list of principals\. For example, you can deny access to all principals *except* the one named in the `NotPrincipal` element\. The syntax for specifying `NotPrincipal` is the same as for specifying [IAM JSON Policy Elements: Principal](reference_policies_elements_principal.md)\.
+Use the `NotPrincipal` element to specify the IAM user, federated user, IAM role, AWS account, AWS service, or other principal that is ***not*** allowed or denied access to a resource\. The `NotPrincipal` element enables you to specify an exception to a list of principals\. Use this element to deny access to all principals *except* the one named in the `NotPrincipal` element\. The syntax for specifying `NotPrincipal` is the same as for specifying [AWS JSON Policy Elements: Principal](reference_policies_elements_principal.md)\.
+
+You cannot use the `NotPrincipal` element in an IAM identity\-based policy\. You can use it in the trust policies for IAM roles and in resource\-based policies\. Resource\-based policies are policies that you embed directly in an IAM resource\. 
 
 **Important**  
 Very few scenarios require the use of `NotPrincipal`, and we recommend that you explore other authorization options before you decide to use `NotPrincipal`\. 
 
 ## `NotPrincipal` with `Allow`<a name="specifying-notprincipal-allow"></a>
 
-We strongly recommend that you do not use `NotPrincipal` in the same policy statement as `"Effect": "Allow"`\. Doing so allows all principals *except* the one named in the `NotPrincipal` element\.We do not recommend this because the permissions specified in the policy statement will be granted to *all* principals except for the ones specified\. By doing this, you might grant access to anonymous \(unauthenticated\) users\.  
+We strongly recommend that you do not use `NotPrincipal` in the same policy statement as `"Effect": "Allow"`\. Doing so allows all principals *except* the one named in the `NotPrincipal` element\. We do not recommend this because the permissions specified in the policy statement will be granted to *all* principals except for the ones specified\. By doing this, you might grant access to anonymous \(unauthenticated\) users\. 
 
 ## `NotPrincipal` with `Deny`<a name="specifying-notprincipal"></a>
 
-When you use `NotPrincipal` in the same policy statement as `"Effect": "Deny"`, the actions specified in the policy statement are explicitly denied to all principals *except* for the ones specified\. You can use this method to implement a form of whitelisting\. When you use `NotPrincipal` with `Deny`, you must also specify the account ARN of the not\-denied principal\. Otherwise, the policy might deny access to the entire account containing the principal\. Depending on the service that you include in your policy, AWS might validate the account first and then the user\. If an assumed\-role user \(someone who is using a role\) is being evaluated, AWS might validate the account first, then the role, and then the assumed\-role user\. The assumed\-role user is identified by the role session name that is specified when they assumes the role\. Therefore, we strongly recommend that you explicitly include the ARN for a user's account, or include both the ARN for a role and the ARN for the account containing that role\.
+When you use `NotPrincipal` in the same policy statement as `"Effect": "Deny"`, the actions specified in the policy statement are explicitly denied to all principals *except* for the ones specified\. You can use this method to implement a form of whitelisting\. When you use `NotPrincipal` with `Deny`, you must also specify the account ARN of the not\-denied principal\. Otherwise, the policy might deny access to the entire account containing the principal\. Depending on the service that you include in your policy, AWS might validate the account first and then the user\. If an assumed\-role user \(someone who is using a role\) is being evaluated, AWS might validate the account first, then the role, and then the assumed\-role user\. The assumed\-role user is identified by the role session name that is specified when they assumed the role\. Therefore, we strongly recommend that you explicitly include the ARN for a user's account, or include both the ARN for a role and the ARN for the account containing that role\.
 
 **Note**  
 As a best practice, you should include the ARNs for the account in your policy\. Some services require the account ARN, although this is not required in all cases\. Any existing policies without the required ARN will continue to work, but new policies that include these services must meet this requirement\. IAM does not track these services, and therefore recommends that you always include the account ARN\.
@@ -62,3 +64,4 @@ This example works as intended when it is part of a policy statement in a resour
     }]
 }
 ```
+When you specify an assumed\-role session in a `NotPrincipal` element, you cannot use a wildcard \(\*\) to mean "all sessions"\. Principals must always name a specific session\.

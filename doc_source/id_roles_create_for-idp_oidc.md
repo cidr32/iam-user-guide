@@ -21,16 +21,17 @@ Before you can create a role for web identity federation, you must first complet
 
    ```
    {
-         "Version": "2012-10-17",
-         "Statement": [{
-             "Effect": "Allow",
-             "Principal": {"Federated": "cognito-identity.amazonaws.com"},
-             "Action": "sts:AssumeRoleWithWebIdentity",
-             "Condition": {
-           "StringEquals": {"cognito-identity.amazonaws.com:aud": "us-east-2:12345678-abcd-abcd-abcd-123456"},
-           "ForAnyValue:StringLike": {"cognito-identity.amazonaws.com:amr": "unauthenticated"}
-         }]
-     }
+       "Version": "2012-10-17",
+       "Statement": {
+           "Effect": "Allow",
+           "Principal": {"Federated": "cognito-identity.amazonaws.com"},
+           "Action": "sts:AssumeRoleWithWebIdentity",
+           "Condition": {
+               "StringEquals": {"cognito-identity.amazonaws.com:aud": "us-east-2:12345678-abcd-abcd-abcd-123456"},
+               "ForAnyValue:StringLike": {"cognito-identity.amazonaws.com:amr": "unauthenticated"}
+           }
+       }
+   }
    ```
 
    Replace `us-east-2:12345678-abcd-abcd-abcd-123456` with the identity pool ID that Amazon Cognito assigned to you\.
@@ -147,7 +148,7 @@ If you are using Amazon Cognito, you should use the Amazon Cognito console to se
 You must create a separate role for each identity provider that you want to support\.
    + If you're creating an advanced scenario role for Amazon Cognito, choose **Amazon Cognito**\. 
 **Note**  
-You need to manually create a role for use with Amazon Cognito only when you are working on an advanced scenario\. Otherwise, Amazon Cognito can create roles for you\. For more information about Amazon Cognito, see [Amazon Cognito Identity](http://docs.aws.amazon.com/mobile/sdkforios/developerguide/cognito-auth.html) in the *AWS Mobile SDK for iOS Developer Guide* and [Amazon Cognito Identity](http://docs.aws.amazon.com/mobile/sdkforandroid/developerguide/cognito-auth.html) in the *AWS Mobile SDK for Android Developer Guide*\. 
+You need to manually create a role for use with Amazon Cognito only when you are working on an advanced scenario\. Otherwise, Amazon Cognito can create roles for you\. For more information about Amazon Cognito, see [Amazon Cognito Identity](https://docs.aws.amazon.com/mobile/sdkforios/developerguide/cognito-auth.html) in the *AWS Mobile SDK for iOS Developer Guide* and [Amazon Cognito Identity](https://docs.aws.amazon.com/mobile/sdkforandroid/developerguide/cognito-auth.html) in the *AWS Mobile SDK for Android Developer Guide*\. 
 
 1. Type the identifier for your application\. The label of the identifier changes depending on which provider you choose:
    + If you're creating a role for Login with Amazon, type the app ID into the **Application ID** box\.
@@ -159,13 +160,17 @@ You need to manually create a role for use with Amazon Cognito only when you are
 
 1. Review your web identity information and then choose **Next: Permissions**\.
 
-1. IAM includes a list of the AWS managed and customer managed policies in your account\. Select the policy to use for the permissions policy or choose **Create policy** to open a new browser tab and create a new policy from scratch\. For more information, see step 4 in the procedure [Creating IAM Policies \(Console\)](access_policies_create.md#access_policies_create-start)\. After you create the policy, close that tab and return to your original tab\. Select the check box next to the permissions policies that you want web identity users to have\. If you prefer, you can select no policies at this time, and then attach policies to the role later\. By default, a role has no permissions\.
+1. IAM includes a list of the AWS managed and customer managed policies in your account\. Select the policy to use for the permissions policy or choose **Create policy** to open a new browser tab and create a new policy from scratch\. For more information, see step 4 in the procedure [Creating IAM Policies \(Console\)](access_policies_create-console.md#access_policies_create-start)\. After you create the policy, close that tab and return to your original tab\. Select the check box next to the permissions policies that you want web identity users to have\. If you prefer, you can select no policies at this time, and then attach policies to the role later\. By default, a role has no permissions\.
 
 1. \(Optional\) Set a [permissions boundary](access_policies_boundaries.md)\. This is an advanced feature\.
 
    Open the **Set permissions boundary** section and choose **Use a permissions boundary to control the maximum role permissions**\. Select the policy to use for the permissions boundary\.
 
-1. Choose **Next: Review**\.
+1. Choose **Next: Tags**\.
+
+1. \(Optional\) Add metadata to the role by attaching tags as key–value pairs\. For more information about using tags in IAM, see [Tagging IAM Users and Roles](id_tags.md)\.
+
+1. Choose **Next: Review**\. 
 
 1. For **Role name**, type a role name\. Role names must be unique within your AWS account\. They are not distinguished by case\. For example, you cannot create roles named both **PRODROLE** and **prodrole**\. Because other AWS resources might reference the role, you cannot edit the name of the role after it has been created\.
 
